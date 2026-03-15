@@ -1,0 +1,73 @@
+// footer.component.scss
+@import '../../../../../styles/variables';
+@import '../../../../../styles/mixins';
+
+.footer {
+  // ✅ #12100d → var(--pub-bg-dark)
+  background: var(--pub-bg-dark);
+  color: rgba(247,244,239,.7);
+  font-size: .875rem;
+}
+
+.container { max-width: 1200px; margin: 0 auto; padding: 0 var(--space-xl); }
+
+.footer__top { padding: 80px 0 60px; }
+
+.footer__grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 48px;
+  @include breakpoint(md) { grid-template-columns: 1fr 1fr; }
+  @include breakpoint(sm) { grid-template-columns: 1fr; }
+}
+
+.footer__logo {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 16px;
+  &-mark { color: var(--pub-gold); font-size: 1.2rem; }
+  // ✅ #f7f4ef → var(--pub-bg)
+  &-text { font-family: var(--font-heading); font-size: 1.4rem; color: var(--pub-bg); letter-spacing: .08em; }
+}
+
+.footer__tagline { line-height: 1.7; margin-bottom: 24px; max-width: 280px; }
+
+.footer__social { display: flex; gap: 16px; }
+.footer__social-link {
+  color: rgba(247,244,239,.5); text-decoration: none;
+  font-size: .78rem; letter-spacing: .08em; text-transform: uppercase;
+  transition: color .2s;
+  // ✅ #b8934a → var(--pub-gold)
+  &:hover { color: var(--pub-gold); }
+}
+
+.footer__col-title {
+  // ✅ font hardcoded → var(--font-heading), #f7f4ef → var(--pub-bg)
+  font-family: var(--font-heading); font-size: 1.1rem; font-weight: 500;
+  color: var(--pub-bg); margin-bottom: 20px;
+}
+
+.footer__links {
+  list-style: none; display: flex; flex-direction: column; gap: 10px;
+  li a {
+    color: rgba(247,244,239,.6); text-decoration: none; transition: color .2s;
+    // ✅ #b8934a → var(--pub-gold)
+    &:hover { color: var(--pub-gold); }
+  }
+}
+
+.footer__contact {
+  list-style: none; display: flex; flex-direction: column; gap: 12px;
+  li { color: rgba(247,244,239,.6); }
+}
+
+.footer__bottom {
+  border-top: 1px solid rgba(255,255,255,.06);
+  padding: 20px 0;
+  .container { display: flex; justify-content: space-between; align-items: center; }
+}
+
+.footer__admin-link {
+  color: rgba(247,244,239,.2); text-decoration: none;
+  font-size: .75rem; transition: color .2s;
+  // ✅ #b8934a → var(--pub-gold)
+  &:hover { color: var(--pub-gold); }
+}

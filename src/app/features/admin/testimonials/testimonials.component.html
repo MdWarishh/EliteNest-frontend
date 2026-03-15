@@ -1,0 +1,65 @@
+<!-- testimonials.component.html -->
+<div class="page">
+  <div class="page__header">
+    <div><h1 class="page__title">Testimonials</h1><p class="page__subtitle">{{ items().length }} reviews</p></div>
+    <button class="btn-primary" (click)="openCreate()">+ Add Review</button>
+  </div>
+
+  @if (loading()) {
+    <div class="skeleton-list">@for (i of [1,2,3]; track i){<div class="skeleton-row"></div>}</div>
+  } @else if (items().length === 0) {
+    <div class="empty-state"><span class="empty-state__icon">❝</span><p>No testimonials yet</p><button class="btn-primary" (click)="openCreate()">Add Review</button></div>
+  } @else {
+    <div class="reviews-grid">
+      @for (t of items(); track t._id) {
+        <div class="review-card">
+          <div class="review-card__header">
+            <div class="review-card__avatar">{{ t.clientName.charAt(0) }}</div>
+            <div>
+              <div class="review-card__name">{{ t.clientName }}</div>
+              <div class="review-card__role">{{ t.clientDesignation || '—' }}</div>
+            </div>
+            <div class="review-card__badges">
+              @if (t.isFeatured) { <span class="badge badge--gold">★ Featured</span> }
+              <span class="badge" [class]="t.isActive ? 'badge--success' : 'badge--error'">{{ t.isActive ? 'Active' : 'Hidden' }}</span>
+            </div>
+          </div>
+          <div class="review-card__stars">@for (s of stars(t.rating); track $index){<span>{{ s }}</span>}</div>
+          <p class="review-card__text">"{{ t.review }}"</p>
+          <div class="review-card__actions">
+            <button class="action-btn action-btn--edit" (click)="openEdit(t)">✎ Edit</button>
+            <button class="action-btn action-btn--delete" (click)="confirmDelete(t._id)">✕ Delete</button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>
+
+@if (showForm()) {
+  <div class="panel-backdrop" (click)="showForm.set(false)">
+    <div class="panel" (click)="$event.stopPropagation()">
+      <div class="panel__header">
+        <h2 class="panel__title">{{ editItem() ? 'Edit Review' : 'New Review' }}</h2>
+        <button class="panel__close" (click)="showForm.set(false)">✕</button>
+      </div>
+      @if (error()) { <div class="form-error-banner">⚠ {{ error() }}</div> }
+      <div class="form-group"><label class="form-label form-label--required">Client Name</label><input class="form-input" [(ngModel)]="form.clientName" placeholder="Client name" /></div>
+      <div class="form-group"><label class="form-label">Designation</label><input class="form-input" [(ngModel)]="form.clientDesignation" placeholder="e.g. Homeowner, Mumbai" /></div>
+      <div class="form-group"><label class="form-label form-label--required">Review</label><textarea class="form-textarea" [(ngModel)]="form.review" rows="4" placeholder="Client review..."></textarea></div>
+      <div class="form-group">
+        <label class="form-label">Rating</label>
+        <select class="form-select" [(ngModel)]="form.rating">
+          @for (r of [5,4,3,2,1]; track r) { <option [value]="r">{{ r }} ★</option> }
+        </select>
+      </div>
+      <div class="panel__actions">
+        <button class="btn-secondary" (click)="showForm.set(false)">Cancel</button>
+        <button class="btn-primary" (click)="onSubmit()" [disabled]="saving()">{{ saving() ? 'Saving...' : (editItem() ? 'Update' : 'Add Review') }}</button>
+      </div>
+    </div>
+  </div>
+}
+
+<app-confirm-modal [visible]="!!deleteId()" title="Delete Review?" message="This will permanently delete the testimonial."
+  [loading]="deleting()" (confirm)="doDelete()" (cancel)="cancelDelete()" />

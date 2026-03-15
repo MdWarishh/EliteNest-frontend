@@ -1,0 +1,30 @@
+<!-- src/app/features/admin/layout/topbar/topbar.component.html -->
+<header class="topbar">
+
+  <div class="topbar__left">
+    <button class="topbar__menu-btn" (click)="toggleSidebar.emit()" title="Toggle sidebar">
+      ☰
+    </button>
+    <div class="topbar__breadcrumb">
+      <span class="topbar__breadcrumb-root">Admin</span>
+      <span class="topbar__breadcrumb-sep">›</span>
+      <span class="topbar__breadcrumb-current">{{ currentTitle }}</span>
+    </div>
+  </div>
+
+  <div class="topbar__right">
+    <span class="topbar__date">{{ currentTime }}</span>
+
+    <a href="/" target="_blank" class="topbar__action" title="View live site">
+      <span>↗</span> Live Site
+    </a>
+
+    <div class="topbar__user">
+      <div class="topbar__user-avatar">
+        {{ admin?.name?.charAt(0) || 'A' }}
+      </div>
+      <span class="topbar__user-name">{{ admin?.name }}</span>
+    </div>
+  </div>
+
+</header>

@@ -1,0 +1,127 @@
+// portfolio.component.scss
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins';
+@import '../_public-shared';
+
+.port-page { background: var(--pub-bg); }
+
+// Page Hero
+.page-hero {
+  position: relative; min-height: 340px;
+  @include flex(column, center, center);
+  overflow: hidden;
+
+  // ✅ #1a1208, #2d1f0e → var(--pub-bg-dark)
+  &__bg { position: absolute; inset: 0; background: linear-gradient(135deg, var(--pub-bg-dark), var(--pub-bg-dark)); }
+  &__content { position: relative; z-index: 2; text-align: center; padding-top: 80px; }
+  &__eyebrow { font-size: .75rem; letter-spacing: .25em; text-transform: uppercase; color: var(--pub-gold); margin-bottom: 12px; }
+  &__title { font-family: var(--font-heading); font-size: clamp(3rem, 8vw, 5rem); font-weight: 300; color: var(--pub-bg); margin-bottom: 12px; }
+  &__sub { color: rgba(247,244,239,.6); font-size: 1rem; }
+}
+
+// Filters
+.port-filters {
+  background: var(--pub-bg-card);
+  border-bottom: 1px solid var(--pub-border);
+  padding: 24px 0;
+  position: sticky; top: 80px; z-index: 100;
+  &__inner { @include flex(row, center, flex-start, var(--space-sm)); flex-wrap: wrap; }
+}
+
+.filter-btn {
+  padding: 8px 20px;
+  background: transparent;
+  border: 1px solid var(--pub-border);
+  border-radius: 999px;
+  color: var(--pub-text-sec);
+  font-size: .82rem;
+  letter-spacing: .05em;
+  cursor: pointer;
+  transition: all .25s ease;
+  &:hover { border-color: var(--pub-gold); color: var(--pub-gold); }
+  &--active { background: var(--pub-gold); border-color: var(--pub-gold); color: #fff; }
+}
+
+// Grid
+.port-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  @include breakpoint(md) { grid-template-columns: repeat(2, 1fr); }
+  @include breakpoint(sm) { grid-template-columns: 1fr; }
+}
+
+.port-card {
+  position: relative; overflow: hidden; border-radius: 4px;
+  cursor: pointer;
+
+  // ✅ #e8ddd0 → var(--pub-bg-alt)
+  background: var(--pub-bg-alt);
+
+  &:hover .port-card__overlay { opacity: 1; }
+  &:hover .port-card__img img { transform: scale(1.06); }
+
+  &__img {
+    width: 100%; padding-bottom: 72%; position: relative; overflow: hidden;
+    img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .6s ease; }
+  }
+
+  &__placeholder {
+    position: absolute; inset: 0;
+    @include flex(row, center, center);
+    font-size: 3rem; color: var(--pub-gold); opacity: .3;
+
+    // ✅ #e8ddd0, #d4c4b0 → var(--pub-bg-alt)
+    background: var(--pub-bg-alt);
+  }
+
+  &__overlay {
+    position: absolute; inset: 0;
+
+    // ✅ rgba(26,22,18,...) — yeh theek hai, pub-bg-dark ka rgba version hai
+    // lekin dynamic banana ho toh pub-bg-dark use karo
+    background: linear-gradient(to top, rgba(26,22,18,.88) 0%, rgba(26,22,18,.2) 60%, transparent 100%);
+    @include flex(column, flex-end, flex-start);
+    padding: 24px; opacity: 0;
+    transition: opacity .4s ease;
+  }
+
+  &__cat { font-size: .7rem; letter-spacing: .15em; text-transform: uppercase; color: var(--pub-gold); margin-bottom: 6px; }
+  &__title { font-family: var(--font-heading); font-size: 1.25rem; color: var(--pub-bg); margin-bottom: 8px; }
+  &__meta { @include flex(row, center, flex-start, var(--space-md)); flex-wrap: wrap;
+    span { font-size: .75rem; color: rgba(247,244,239,.6); }
+  }
+}
+
+// Pagination
+.port-pagination { @include flex(row, center, center, var(--space-lg)); margin-top: 48px; }
+.port-page-btn {
+  padding: 10px 24px;
+  background: transparent; border: 1px solid var(--pub-border);
+  border-radius: 2px; color: var(--pub-text-sec); cursor: pointer;
+  font-size: .875rem; transition: all .2s;
+  &:hover:not(:disabled) { border-color: var(--pub-gold); color: var(--pub-gold); }
+  &:disabled { opacity: .4; cursor: not-allowed; }
+}
+.port-page-dots { @include flex(row, center, center, 8px); }
+.port-page-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--pub-border); border: none; cursor: pointer;
+  transition: all .25s;
+  &--active { background: var(--pub-gold); transform: scale(1.3); }
+}
+
+// Skeleton
+.port-skeleton { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+  @include breakpoint(md) { grid-template-columns: repeat(2, 1fr); }
+  @include breakpoint(sm) { grid-template-columns: 1fr; }
+}
+.port-skeleton__item { width: 100%; padding-bottom: 72%; background: var(--pub-bg-alt); border-radius: 4px; animation: pulse 1.5s ease infinite; }
+
+// Empty
+.port-empty { @include flex(column, center, center, var(--space-md)); padding: 80px; text-align: center;
+  span { font-size: 3rem; opacity: .3; }
+  p { color: var(--pub-text-sec); }
+}
+
+@keyframes pulse { 0%, 100% { opacity: .8; } 50% { opacity: .4; } }

@@ -1,0 +1,110 @@
+<!-- blog-form.component.html -->
+<div class="form-page">
+  <div class="page__header">
+    <div>
+      <h1 class="page__title">{{ isEdit() ? 'Edit Article' : 'New Article' }}</h1>
+      <p class="page__subtitle">{{ isEdit() ? 'Update blog post' : 'Write a new blog post' }}</p>
+    </div>
+    <a class="btn-secondary" routerLink="/admin/blogs">← Back</a>
+  </div>
+
+  @if (error()) { <div class="form-error-banner">⚠ {{ error() }}</div> }
+
+  @if (loading()) {
+    <div class="skeleton-list">@for(i of [1,2,3]; track i){<div class="skeleton-row" style="height:100px"></div>}</div>
+  } @else {
+
+  <!-- Basic Info -->
+  <div class="form-section">
+    <h2 class="form-section__title">Article Info</h2>
+    <div class="form-section__grid">
+
+      <div class="form-group form-group--full">
+        <label class="form-label form-label--required">Title</label>
+        <input class="form-input" type="text" [(ngModel)]="form.title" placeholder="e.g. 10 Tips to Make Your Living Room Look Luxurious" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label form-label--required">Category</label>
+        <select class="form-select" [(ngModel)]="form.category">
+          @for (cat of categories; track cat) { <option [value]="cat">{{ cat }}</option> }
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Author</label>
+        <input class="form-input" [(ngModel)]="form.author" placeholder="EliteNest Team" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Read Time (minutes)</label>
+        <input class="form-input" type="number" [(ngModel)]="form.readTime" min="1" max="60" />
+      </div>
+
+      <div class="form-group form-group--full">
+        <label class="form-label">Tags <span class="form-hint">(comma separated)</span></label>
+        <input class="form-input" [(ngModel)]="form.tags" placeholder="interior design, living room, modern" />
+      </div>
+
+      <div class="form-group form-group--full">
+        <label class="form-label">Excerpt <span class="form-hint">(shown on cards — max 300 chars)</span></label>
+        <textarea class="form-textarea" rows="2" [(ngModel)]="form.excerpt" placeholder="Brief description of the article..."></textarea>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Featured Image -->
+  <div class="form-section">
+    <h2 class="form-section__title">Featured Image</h2>
+    <div class="upload-zone" (click)="imgInput.click()">
+      @if (imagePreview() || existingImage()) {
+        <img [src]="imagePreview() || existingImage()" class="upload-zone__preview" alt="Preview" />
+        <div class="upload-zone__replace">Click to replace</div>
+      } @else {
+        <div class="upload-zone__placeholder">
+          <span class="upload-zone__icon">🖼</span>
+          <span class="upload-zone__text">Click to upload featured image</span>
+          <span class="upload-zone__hint">JPG, PNG, WebP — Recommended 1200×630px</span>
+        </div>
+      }
+    </div>
+    <input #imgInput type="file" accept="image/*" style="display:none" (change)="onImageSelect($event)" />
+  </div>
+
+  <!-- Content -->
+  <div class="form-section">
+    <h2 class="form-section__title">Content</h2>
+    <div class="form-group">
+      <label class="form-label form-label--required">Article Content</label>
+      <textarea class="form-textarea form-textarea--lg" rows="16" [(ngModel)]="form.content"
+        placeholder="Write your article content here. You can use basic HTML for formatting.&#10;&#10;Example:&#10;&lt;h2&gt;Section Title&lt;/h2&gt;&#10;&lt;p&gt;Your paragraph text...&lt;/p&gt;"></textarea>
+      <span class="form-hint">HTML is supported for formatting (h2, p, ul, li, strong, em)</span>
+    </div>
+  </div>
+
+  <!-- Settings -->
+  <div class="form-section">
+    <h2 class="form-section__title">Publishing</h2>
+    <div class="toggle-group">
+      <div class="toggle-item">
+        <div><div class="toggle-item__label">Published</div><div class="toggle-item__desc">Visible on public website</div></div>
+        <label class="toggle-switch"><input type="checkbox" [(ngModel)]="form.isPublished" /><span class="toggle-switch__track"></span></label>
+      </div>
+      <div class="toggle-item">
+        <div><div class="toggle-item__label">Featured</div><div class="toggle-item__desc">Highlighted on blog listing</div></div>
+        <label class="toggle-switch"><input type="checkbox" [(ngModel)]="form.isFeatured" /><span class="toggle-switch__track"></span></label>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <a class="btn-secondary" routerLink="/admin/blogs">Cancel</a>
+    <button class="btn-primary" (click)="onSubmit()" [disabled]="saving()">
+      @if (saving()) {<span class="saving-spinner"></span>}
+      {{ saving() ? 'Saving...' : (isEdit() ? 'Update Article' : 'Publish Article') }}
+    </button>
+  </div>
+
+  }
+</div>

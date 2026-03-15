@@ -1,0 +1,182 @@
+// hero.component.scss
+@import '../../../../../../styles/variables';
+@import '../../../../../../styles/mixins';
+@import '../../../public-shared';
+.hero {
+  position: relative;
+  min-height: 100vh;
+  @include flex(column, center, center);
+  overflow: hidden;
+
+  &__slides {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  &__slide {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transition: opacity 1s ease;
+
+    &--fallback {
+      background: linear-gradient(135deg,
+        var(--pub-bg-dark) 0%,
+        var(--pub-bg-dark) 100%);
+    }
+
+    &--active { opacity: 1; }
+  }
+
+  &__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(
+      135deg,
+      rgba(26, 22, 18, 0.55) 0%,
+      rgba(26, 22, 18, 0.45) 50%,
+      rgba(26, 22, 18, 0.55) 100%
+    );
+  }
+
+  &__pattern {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background-image:
+      repeating-linear-gradient(0deg,  transparent, transparent 80px, rgba(184,147,74,.025) 80px, rgba(184,147,74,.025) 81px),
+      repeating-linear-gradient(90deg, transparent, transparent 80px, rgba(184,147,74,.025) 80px, rgba(184,147,74,.025) 81px);
+  }
+
+  &__content {
+    position: relative;
+    z-index: 5;
+    padding-top: 120px;
+    padding-bottom: 80px;
+    max-width: 760px;
+    // NOTE: CSS animation removed — GSAP handles entrance
+  }
+
+  &__eyebrow {
+    font-size: .78rem;
+    font-weight: 500;
+    letter-spacing: .25em;
+    text-transform: uppercase;
+    color: var(--pub-gold);
+    margin-bottom: 24px;
+  }
+
+  &__title {
+    font-family: var(--font-heading);
+    font-size: clamp(2.8rem, 7vw, 5.5rem);
+    font-weight: 300;
+    line-height: 1.1;
+    color: var(--pub-bg);
+    margin-bottom: 24px;
+    ::ng-deep em { font-style: italic; color: var(--pub-gold); }
+  }
+
+  &__subtitle {
+    font-size: 1.1rem;
+    color: rgba(247,244,239,.75);
+    line-height: 1.75;
+    max-width: 520px;
+    margin-bottom: 40px;
+  }
+
+  &__actions {
+    @include flex(row, center, flex-start, var(--space-lg));
+    flex-wrap: wrap;
+    margin-bottom: 80px;
+  }
+
+  &__scroll-hint {
+    @include flex(row, center, flex-start, 12px);
+    opacity: .45;
+  }
+
+  &__scroll-line {
+    display: block;
+    width: 40px;
+    height: 1px;
+    background: var(--pub-bg);
+    animation: scrollLine 2s ease infinite;
+  }
+
+  &__scroll-text {
+    font-size: .72rem;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--pub-bg);
+  }
+
+  &__dots {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    @include flex(row, center, center, 10px);
+  }
+
+  &__dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(247,244,239,.35);
+    cursor: pointer;
+    padding: 0;
+    transition: background .3s ease, transform .3s ease;
+
+    &--active {
+      background: var(--pub-gold);
+      transform: scale(1.35);
+    }
+
+    &:hover:not(.hero__dot--active) {
+      background: rgba(247,244,239,.65);
+    }
+  }
+
+  &__arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    background: rgba(26,22,18,.35);
+    border: 1px solid rgba(247,244,239,.2);
+    color: var(--pub-bg);
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    font-size: 1.6rem; line-height: 1;
+    cursor: pointer;
+    transition: background .3s ease, border-color .3s ease;
+
+    &:hover {
+      background: rgba(184,147,74,.7);
+      border-color: var(--pub-gold);
+    }
+
+    &--prev { left: 24px; }
+    &--next { right: 24px; }
+
+    @include breakpoint(sm) {
+      width: 36px; height: 36px; font-size: 1.2rem;
+      &--prev { left: 12px; }
+      &--next { right: 12px; }
+    }
+  }
+}
+
+@keyframes scrollLine {
+  0%   { transform: scaleX(0); transform-origin: left; }
+  50%  { transform: scaleX(1); transform-origin: left; }
+  51%  { transform: scaleX(1); transform-origin: right; }
+  100% { transform: scaleX(0); transform-origin: right; }
+}

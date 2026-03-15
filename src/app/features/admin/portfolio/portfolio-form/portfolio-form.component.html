@@ -1,0 +1,199 @@
+<!-- portfolio-form.component.html -->
+<div class="form-page">
+  <div class="page__header">
+    <div>
+      <h1 class="page__title">{{ isEdit() ? 'Edit Project' : 'New Project' }}</h1>
+      <p class="page__subtitle">{{ isEdit() ? 'Update portfolio item' : 'Add a new portfolio item' }}</p>
+    </div>
+    <a class="btn-secondary" routerLink="/admin/portfolio">← Back</a>
+  </div>
+
+  @if (error()) {
+    <div class="form-error-banner">⚠ {{ error() }}</div>
+  }
+
+  @if (loading()) {
+    <div class="skeleton-list">
+      @for (i of [1,2,3]; track i) { <div class="skeleton-row" style="height:120px"></div> }
+    </div>
+  } @else {
+
+  <!-- Basic Info -->
+  <div class="form-section">
+    <h2 class="form-section__title">Basic Info</h2>
+    <div class="form-section__grid">
+
+      <div class="form-group">
+        <label class="form-label form-label--required">Title</label>
+        <input class="form-input" type="text" [(ngModel)]="form.title" placeholder="e.g. Modern Villa Living Room" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label form-label--required">Category</label>
+        <select class="form-select" [(ngModel)]="form.category">
+          <option value="">Select category</option>
+          @for (cat of categories(); track cat._id) {
+            <option [value]="cat._id">{{ cat.name }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-group form-group--full">
+        <label class="form-label">Short Description</label>
+        <textarea class="form-textarea" [(ngModel)]="form.shortDescription" rows="2"
+          placeholder="Brief description shown on portfolio cards..."></textarea>
+      </div>
+
+      <div class="form-group form-group--full">
+        <label class="form-label">Tags</label>
+        <input class="form-input" type="text" [(ngModel)]="form.tags"
+          placeholder="modern, villa, luxury (comma separated)" />
+        <span class="form-hint">Separate tags with commas</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Thumbnail Upload -->
+  <div class="form-section">
+    <h2 class="form-section__title">Thumbnail Image</h2>
+    <p class="form-section__desc">Main image shown on portfolio cards and listings.</p>
+    <div class="upload-zone" (click)="thumbInput.click()">
+      @if (thumbnailPreview()) {
+        <img class="upload-zone__preview" [src]="thumbnailPreview()" alt="Thumbnail preview" />
+        <div class="upload-zone__replace">Click to replace</div>
+      } @else if (existingThumbnail()) {
+        <img class="upload-zone__preview" [src]="existingThumbnail()" alt="Existing thumbnail" />
+        <div class="upload-zone__replace">Click to replace</div>
+      } @else {
+        <div class="upload-zone__placeholder">
+          <span class="upload-zone__icon">🖼</span>
+          <span class="upload-zone__text">Click to upload thumbnail</span>
+          <span class="upload-zone__hint">JPG, PNG, WebP — Recommended 800×600px</span>
+        </div>
+      }
+    </div>
+    <input #thumbInput type="file" accept="image/*" style="display:none" (change)="onThumbnailSelect($event)" />
+  </div>
+
+  <!-- Gallery Upload -->
+  <div class="form-section">
+    <h2 class="form-section__title">Gallery Images</h2>
+    <p class="form-section__desc">Add multiple images for the project gallery. You can upload up to 20 images.</p>
+
+    <!-- Existing images (edit mode) -->
+    @if (existingImages().length) {
+      <div class="gallery-label">Existing Images ({{ existingImages().length }})</div>
+      <div class="gallery-grid">
+        @for (img of existingImages(); track img._id) {
+          <div class="gallery-item">
+            <img [src]="img.url" [alt]="img.alt || 'Gallery image'" />
+            <div class="gallery-item__info">{{ img.alt || 'Image' }}</div>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- New upload area -->
+    <div class="upload-zone upload-zone--multi" (click)="galleryInput.click()">
+      <div class="upload-zone__placeholder">
+        <span class="upload-zone__icon">📷</span>
+        <span class="upload-zone__text">Click to add gallery images</span>
+        <span class="upload-zone__hint">Select multiple — JPG, PNG, WebP</span>
+      </div>
+    </div>
+    <input #galleryInput type="file" accept="image/*" multiple style="display:none"
+      (change)="onGallerySelect($event)" />
+
+    @if (galleryPreviews().length) {
+      <div class="gallery-grid" style="margin-top: 16px">
+        @for (preview of galleryPreviews(); track preview; let i = $index) {
+          <div class="gallery-item">
+            <img [src]="preview" alt="New image" />
+            <button class="gallery-item__remove" (click)="removeGalleryFile(i); $event.stopPropagation()">✕</button>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Project Details -->
+  <div class="form-section">
+    <h2 class="form-section__title">Project Details</h2>
+    <div class="form-section__grid">
+
+      <div class="form-group">
+        <label class="form-label">Location</label>
+        <input class="form-input" type="text" [(ngModel)]="form.projectDetails.location"
+          placeholder="e.g. Mumbai, Maharashtra" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Area</label>
+        <input class="form-input" type="text" [(ngModel)]="form.projectDetails.area"
+          placeholder="e.g. 1200 sq ft" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Style</label>
+        <input class="form-input" type="text" [(ngModel)]="form.projectDetails.style"
+          placeholder="e.g. Contemporary, Modern, Classic" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Year</label>
+        <input class="form-input" type="number" [(ngModel)]="form.projectDetails.year" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Duration</label>
+        <input class="form-input" type="text" [(ngModel)]="form.projectDetails.duration"
+          placeholder="e.g. 3 months" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Budget</label>
+        <input class="form-input" type="text" [(ngModel)]="form.projectDetails.budget"
+          placeholder="e.g. ₹15–20 Lakhs" />
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Settings -->
+  <div class="form-section">
+    <h2 class="form-section__title">Settings</h2>
+    <div class="toggle-group">
+      <div class="toggle-item">
+        <div>
+          <div class="toggle-item__label">Featured</div>
+          <div class="toggle-item__desc">Show on homepage featured section</div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" [(ngModel)]="form.isFeatured" />
+          <span class="toggle-switch__track"></span>
+        </label>
+      </div>
+      <div class="toggle-item">
+        <div>
+          <div class="toggle-item__label">Active</div>
+          <div class="toggle-item__desc">Visible on public website</div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" [(ngModel)]="form.isActive" />
+          <span class="toggle-switch__track"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <a class="btn-secondary" routerLink="/admin/portfolio">Cancel</a>
+    <button class="btn-primary" (click)="onSubmit()" [disabled]="saving()">
+      @if (saving()) { <span class="saving-spinner"></span> }
+      {{ saving() ? 'Saving...' : (isEdit() ? 'Update Project' : 'Create Project') }}
+    </button>
+  </div>
+
+  } <!-- end if not loading -->
+</div>

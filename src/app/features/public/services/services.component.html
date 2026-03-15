@@ -1,0 +1,71 @@
+<div class="public-page">
+  <!-- Hero -->
+  <section class="services-hero">
+    <div class="container">
+      <span class="eyebrow">Our Services</span>
+      <h1 class="services-hero__title">Turning Spaces Into<br><em>Extraordinary Places</em></h1>
+      <p class="services-hero__sub">From concept to completion, EliteNest delivers end-to-end interior design solutions tailored to your taste and lifestyle.</p>
+    </div>
+  </section>
+
+  <!-- Services Grid -->
+  <section class="section">
+    <div class="container">
+      @if (loading()) {
+        <div class="services-grid">@for (i of [1,2,3,4,5,6]; track i){<div class="svc-skeleton"></div>}</div>
+      } @else if (services().length === 0) {
+        <div class="empty-state"><p>Services coming soon.</p></div>
+      } @else {
+        <div class="services-grid">
+          @for (svc of services(); track svc._id) {
+            <div class="svc-card">
+              @if (svc.icon) { <div class="svc-card__icon">{{ svc.icon }}</div> }
+              <h3 class="svc-card__title">{{ svc.name }}</h3>
+              <p class="svc-card__desc">{{ svc.description }}</p>
+              @if (svc.priceRange?.min) {
+                <div class="svc-card__price">Starting ₹{{ svc.priceRange.min | number }}+</div>
+              }
+              @if (svc.deliverables?.length) {
+                <ul class="svc-card__list">
+                  @for (d of svc.deliverables.slice(0,4); track d) {
+                    <li>✓ {{ d }}</li>
+                  }
+                </ul>
+              }
+              <a routerLink="/contact" class="svc-card__cta">Enquire Now →</a>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- Process -->
+  <section class="section section--alt">
+    <div class="container">
+      <div class="section-header">
+        <span class="eyebrow">Our Process</span>
+        <h2 class="section-title">How We Work</h2>
+        <p class="section-sub">A seamless, transparent process from the first conversation to the final reveal.</p>
+      </div>
+      <div class="process-grid">
+        @for (step of process; track step.num) {
+          <div class="process-step">
+            <div class="process-step__num">{{ step.num }}</div>
+            <h4 class="process-step__title">{{ step.title }}</h4>
+            <p class="process-step__desc">{{ step.desc }}</p>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section services-cta">
+    <div class="container">
+      <h2 class="services-cta__title">Ready to Begin?</h2>
+      <p class="services-cta__sub">Book a free 30-minute consultation with our design team.</p>
+      <a routerLink="/contact" class="btn-gold">Get Free Consultation</a>
+    </div>
+  </section>
+</div>

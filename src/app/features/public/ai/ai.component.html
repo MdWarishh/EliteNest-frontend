@@ -1,0 +1,314 @@
+<div class="public-page ai-page">
+
+  <!-- Hero -->
+  <section class="ai-hero">
+    <div class="container">
+      <span class="eyebrow">AI Design Studio</span>
+      <h1 class="ai-hero__title">Your Personal <em>AI Design</em> Assistant</h1>
+      <p class="ai-hero__sub">Powered by Groq AI &amp; Unsplash — chat with our AI, visualise your dream room, generate palettes, estimate budgets and get expert tips.</p>
+    </div>
+  </section>
+
+  <!-- Tabs -->
+  <div class="ai-tabs">
+    <div class="container">
+      <div class="ai-tabs__bar">
+        <button class="ai-tab" [class.active]="activeTab()==='chat'"      (click)="activeTab.set('chat')">💬 AI Chat</button>
+        <button class="ai-tab" [class.active]="activeTab()==='visualize'" (click)="activeTab.set('visualize')">🏠 Room Visualizer</button>
+        <button class="ai-tab" [class.active]="activeTab()==='color'"     (click)="activeTab.set('color')">🎨 Colour Palette</button>
+        <button class="ai-tab" [class.active]="activeTab()==='budget'"    (click)="activeTab.set('budget')">💰 Budget Estimator</button>
+        <button class="ai-tab" [class.active]="activeTab()==='tips'"      (click)="activeTab.set('tips')">✨ Design Tips</button>
+      </div>
+    </div>
+  </div>
+
+  <section class="section ai-content">
+    <div class="container">
+
+      <!-- ═══ CHAT ═══════════════════════════════════════════ -->
+      @if (activeTab()==='chat') {
+        <div class="chat-wrapper">
+          <div class="chat-box" #chatBox>
+            @for (msg of messages(); track msg.timestamp) {
+              <div class="chat-msg" [class.user]="msg.role==='user'" [class.ai]="msg.role==='assistant'">
+                @if (msg.role==='assistant') { <div class="chat-msg__avatar">✨</div> }
+                <div class="chat-msg__bubble">
+                  <p>{{ msg.content }}</p>
+                  <span class="chat-msg__time">{{ msg.timestamp | date:'h:mm a' }}</span>
+                </div>
+              </div>
+            }
+            @if (chatLoading()) {
+              <div class="chat-msg ai">
+                <div class="chat-msg__avatar">✨</div>
+                <div class="chat-msg__bubble typing"><span></span><span></span><span></span></div>
+              </div>
+            }
+          </div>
+          <div class="chat-input">
+            <textarea class="chat-input__field" [(ngModel)]="userInput" (keydown)="onKeydown($event)"
+              placeholder="Ask about design styles, colours, furniture, room ideas..." rows="2"></textarea>
+            <button class="chat-input__send" (click)="sendMessage()" [disabled]="!userInput().trim()||chatLoading()">
+              @if (chatLoading()) {<span class="btn-spin"></span>} @else {→}
+            </button>
+          </div>
+          <div class="chat-suggestions">
+            <span class="chat-suggestions__label">Try:</span>
+            @for (q of ['Best colours for a small bedroom?','How to make a room look larger?','Modern vs Minimalist style — difference?','Budget-friendly luxury tips']; track q) {
+              <button class="chat-sugg" (click)="userInput.set(q); sendMessage()">{{ q }}</button>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- ═══ ROOM VISUALIZER ══════════════════════════════ -->
+      @if (activeTab()==='visualize') {
+        <div class="tool-wrapper">
+          <div class="tool-header">
+            <h2 class="tool-title">🏠 Room Visualizer</h2>
+            <p class="tool-sub">Select a room type and design style — get a curated HD interior design photo as inspiration for your space.</p>
+            <div class="tool-badge">Powered by Unsplash HD Photos</div>
+          </div>
+
+          <div class="viz-controls">
+            <div class="form-group">
+              <label class="form-label">Room Type</label>
+              <div class="chip-group">
+                @for (room of vizRoomTypes; track room) {
+                  <button class="chip" [class.active]="vizRoomType()===room" (click)="vizRoomType.set(room)">{{ room }}</button>
+                }
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-top:24px">
+              <label class="form-label">Design Style</label>
+              <div class="chip-group">
+                @for (style of vizStyles; track style) {
+                  <button class="chip" [class.active]="vizStyle()===style" (click)="vizStyle.set(style)">{{ style }}</button>
+                }
+              </div>
+            </div>
+
+            <div class="viz-selected">
+              <span class="viz-selected__label">Showing:</span>
+              <span class="viz-selected__val">{{ vizStyle() }} {{ vizRoomType() }}</span>
+            </div>
+
+            <button class="btn-gold btn-lg" (click)="generateRoom()" [disabled]="vizLoading()">
+              @if (vizLoading()) {
+                <span class="btn-spin"></span> Finding your room...
+              } @else {
+                ✦ Find Room Inspiration
+              }
+            </button>
+          </div>
+
+          @if (vizLoading()) {
+            <div class="viz-loading">
+              <div class="viz-loading__animation">
+                <div class="viz-loading__bar"></div>
+                <div class="viz-loading__bar"></div>
+                <div class="viz-loading__bar"></div>
+              </div>
+              <p class="viz-loading__text">Finding the perfect {{ vizStyle() }} {{ vizRoomType() }}...</p>
+              <p class="viz-loading__hint">Searching HD interior photos for you</p>
+            </div>
+          }
+
+          @if (vizError()) {
+            <div class="viz-error">
+              <p>⚠ {{ vizError() }}</p>
+              @if (vizRetry()) {
+                <button class="btn-gold" style="margin-top:12px" (click)="generateRoom()">Try Again</button>
+              }
+            </div>
+          }
+
+          @if (vizResult()) {
+            <div class="viz-result">
+              <div class="viz-result__header">
+                <h3 class="viz-result__title">{{ vizStyle() }} · {{ vizRoomType() }}</h3>
+                <button class="viz-result__download" (click)="downloadViz()">⬇ Download</button>
+              </div>
+
+              <img class="viz-result__img" [src]="vizResult()" alt="{{ vizStyle() }} {{ vizRoomType() }} interior design" />
+
+              <!-- Unsplash attribution (required) -->
+              @if (vizCredit()) {
+                <p class="viz-result__note">
+                  Photo by
+                  <a [href]="vizCredit()!.photographerUrl + '?utm_source=elitenest&utm_medium=referral'"
+                     target="_blank" rel="noopener">{{ vizCredit()!.photographer }}</a>
+                  on
+                  <a href="https://unsplash.com/?utm_source=elitenest&utm_medium=referral"
+                     target="_blank" rel="noopener">Unsplash</a>
+                  · Inspiration image, use as a design reference.
+                </p>
+              }
+
+              <button class="btn-outline-dark" style="margin-top:16px" (click)="generateRoom()">🔄 Find Another</button>
+            </div>
+          }
+        </div>
+      }
+
+      <!-- ═══ COLOUR PALETTE ═══════════════════════════════ -->
+      @if (activeTab()==='color') {
+        <div class="tool-wrapper">
+          <div class="tool-header">
+            <h2 class="tool-title">🎨 AI Colour Palette Generator</h2>
+            <p class="tool-sub">Describe your room, mood, or style — get a curated luxury colour palette instantly.</p>
+          </div>
+          <div class="tool-input-row">
+            <input class="form-input" [(ngModel)]="colorPrompt" (keydown.enter)="generatePalette()"
+              placeholder="e.g. Warm cosy bedroom with earthy tones and wood accents" />
+            <button class="btn-gold" (click)="generatePalette()" [disabled]="colorLoading()||!colorPrompt().trim()">
+              @if (colorLoading()) {<span class="btn-spin"></span> Generating...} @else {Generate}
+            </button>
+          </div>
+
+          @if (colorLoading()) { <div class="tool-loading"><span class="spinner-ring"></span><span>Creating your palette...</span></div> }
+          @if (colorError()) { <div class="ai-error">⚠ {{ colorError() }}</div> }
+
+          @if (palette().length) {
+            <div class="palette-result">
+              @if (paletteName()) { <h3 class="palette-name">{{ paletteName() }}</h3> }
+              <div class="palette-grid">
+                @for (color of palette(); track color.hex) {
+                  <div class="palette-swatch">
+                    <div class="palette-swatch__color" [style.background]="color.hex" (click)="copyColor(color.hex)" title="Click to copy">
+                      <div class="palette-swatch__copy-overlay">📋 Copy</div>
+                    </div>
+                    <div class="palette-swatch__info">
+                      <span class="palette-swatch__name">{{ color.name }}</span>
+                      <span class="palette-swatch__hex">{{ color.hex }}</span>
+                      <span class="palette-swatch__use">{{ color.use }}</span>
+                    </div>
+                  </div>
+                }
+              </div>
+              @if (paletteTip()) { <div class="palette-tip">💡 {{ paletteTip() }}</div> }
+            </div>
+          }
+        </div>
+      }
+
+      <!-- ═══ BUDGET ESTIMATOR ══════════════════════════════ -->
+      @if (activeTab()==='budget') {
+        <div class="tool-wrapper">
+          <div class="tool-header">
+            <h2 class="tool-title">💰 AI Budget Estimator</h2>
+            <p class="tool-sub">Get a realistic cost estimate for your interior design project in India.</p>
+          </div>
+          <div class="budget-form">
+            <div class="form-group">
+              <label class="form-label">Room Type</label>
+              <select class="form-select" [(ngModel)]="budgetForm.roomType">
+                @for (r of roomTypes; track r) { <option>{{ r }}</option> }
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Area (sq ft) *</label>
+              <input class="form-input" type="number" [(ngModel)]="budgetForm.area" placeholder="e.g. 400" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Design Style</label>
+              <select class="form-select" [(ngModel)]="budgetForm.style">
+                @for (s of styles; track s) { <option>{{ s }}</option> }
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Quality Level</label>
+              <select class="form-select" [(ngModel)]="budgetForm.quality">
+                @for (q of qualities; track q) { <option>{{ q }}</option> }
+              </select>
+            </div>
+          </div>
+
+          <button class="btn-gold btn-lg" style="margin-top:8px" (click)="estimateBudget()" [disabled]="budgetLoading()||!budgetForm.area">
+            @if (budgetLoading()) {<span class="btn-spin"></span> Estimating...} @else {Get Budget Estimate}
+          </button>
+
+          @if (budgetLoading()) { <div class="tool-loading"><span class="spinner-ring"></span><span>Calculating estimate...</span></div> }
+          @if (budgetError()) { <div class="ai-error">⚠ {{ budgetError() }}</div> }
+
+          @if (budgetResult()) {
+            <div class="budget-result">
+              <div class="budget-result__hero">
+                <div>
+                  <div class="budget-result__label">Estimated Total</div>
+                  <div class="budget-result__range">{{ budgetResult().totalRange }}</div>
+                </div>
+                @if (budgetResult().perSqFt) {
+                  <div class="budget-result__sqft">
+                    <div class="budget-result__label">Per Sq Ft</div>
+                    <div class="budget-result__range-sm">{{ budgetResult().perSqFt }}</div>
+                  </div>
+                }
+                @if (budgetResult().timeline) {
+                  <div>
+                    <div class="budget-result__label">Timeline</div>
+                    <div class="budget-result__range-sm">⏱ {{ budgetResult().timeline }}</div>
+                  </div>
+                }
+              </div>
+              @if (budgetResult().breakdown?.length) {
+                <div class="budget-breakdown">
+                  <h4 class="budget-breakdown__title">Cost Breakdown</h4>
+                  @for (item of budgetResult().breakdown; track item.category) {
+                    <div class="budget-breakdown__row">
+                      <span class="budget-breakdown__cat">{{ item.category }}</span>
+                      @if (item.percentage) {
+                        <div class="budget-breakdown__bar">
+                          <div class="budget-breakdown__bar-fill" [style.width.%]="item.percentage"></div>
+                        </div>
+                      }
+                      <span class="budget-breakdown__val">{{ item.range }}</span>
+                    </div>
+                  }
+                </div>
+              }
+              @if (budgetResult().notes) {
+                <div class="budget-note">💡 {{ budgetResult().notes }}</div>
+              }
+              <a routerLink="/contact" class="btn-gold" style="margin-top:20px;display:inline-block">Get Exact Quote from EliteNest →</a>
+            </div>
+          }
+        </div>
+      }
+
+      <!-- ═══ DESIGN TIPS ═══════════════════════════════════ -->
+      @if (activeTab()==='tips') {
+        <div class="tool-wrapper">
+          <div class="tool-header">
+            <h2 class="tool-title">✨ Expert Design Tips</h2>
+            <p class="tool-sub">AI-powered, personalised design advice for any room or topic.</p>
+          </div>
+          <div class="tips-picker">
+            @for (cat of tipCategories; track cat) {
+              <button class="chip" [class.active]="tipsCategory()===cat" (click)="tipsCategory.set(cat)">{{ cat }}</button>
+            }
+          </div>
+          <button class="btn-gold btn-lg" style="margin-top:28px" (click)="getTips()" [disabled]="tipsLoading()">
+            @if (tipsLoading()) {<span class="btn-spin"></span> Getting tips...} @else {Get {{ tipsCategory() }} Tips}
+          </button>
+
+          @if (tipsLoading()) { <div class="tool-loading"><span class="spinner-ring"></span><span>Curating expert tips...</span></div> }
+          @if (tipsError()) { <div class="ai-error">⚠ {{ tipsError() }}</div> }
+
+          @if (tips().length) {
+            <div class="tips-list">
+              @for (tip of tips(); track tip; let i = $index) {
+                <div class="tip-card">
+                  <div class="tip-card__num">{{ (i+1).toString().padStart(2,'0') }}</div>
+                  <p class="tip-card__text">{{ tip }}</p>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      }
+
+    </div>
+  </section>
+</div>

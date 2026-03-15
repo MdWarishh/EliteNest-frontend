@@ -1,0 +1,40 @@
+<!-- navbar.component.html -->
+<nav class="navbar" [class.navbar--scrolled]="scrolled()">
+  <div class="navbar__inner">
+
+    <!-- Logo -->
+    <a class="navbar__logo" routerLink="/" (click)="closeMenu()">
+      <span class="navbar__logo-mark">✦</span>
+      <span class="navbar__logo-text">EliteNest</span>
+    </a>
+
+    <!-- Desktop Nav -->
+    <ul class="navbar__links">
+      @for (link of navLinks; track link.route) {
+        <li>
+          <a class="navbar__link" [routerLink]="link.route" routerLinkActive="navbar__link--active"
+            [routerLinkActiveOptions]="{exact: link.route === '/'}">
+            {{ link.label }}
+          </a>
+        </li>
+      }
+    </ul>
+
+    <!-- CTA -->
+    <a class="navbar__cta" routerLink="/contact">Get a Quote</a>
+
+    <!-- Hamburger -->
+    <button class="navbar__hamburger" (click)="toggleMenu()" [class.navbar__hamburger--open]="menuOpen()">
+      <span></span><span></span><span></span>
+    </button>
+
+  </div>
+
+  <!-- Mobile Menu -->
+  <div class="navbar__mobile" [class.navbar__mobile--open]="menuOpen()">
+    @for (link of navLinks; track link.route) {
+      <a class="navbar__mobile-link" [routerLink]="link.route" (click)="closeMenu()">{{ link.label }}</a>
+    }
+    <a class="btn-gold" routerLink="/contact" (click)="closeMenu()">Get a Quote</a>
+  </div>
+</nav>

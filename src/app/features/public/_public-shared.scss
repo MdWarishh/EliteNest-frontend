@@ -1,0 +1,110 @@
+// src/app/features/public/_public-shared.scss
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
+// ─── Public Theme Defaults (overridden by backend theme) ──
+// These are FALLBACK values only — backend injects :root overrides
+// :root {
+//   --pub-gold:        #b8934a;
+//   --pub-gold-light:  #d4ad6f;
+//   --pub-gold-muted:  rgba(184, 147, 74, 0.12);
+//   --pub-bg:          #f7f4ef;
+//   --pub-bg-alt:      #f0ebe2;
+//   --pub-bg-card:     #ffffff;
+//   --pub-bg-dark:     #1a1612;
+//   --pub-text:        #1a1612;
+//   --pub-text-sec:    #6b5e52;
+//   --pub-text-muted:  #a8998a;
+//   --pub-text-light:  #ffffff;
+//   --pub-border:      #e5ddd3;
+//   --pub-radius:      12px;
+//   --pub-section-padding: 100px;
+//   --pub-max-width:   1280px;
+//   --font-heading:    var(--font-heading);
+//   --font-body:       var(--font-body);
+// }
+
+// ─── Public Page Base ─────────────────────────────────
+.public-page {
+  background: var(--pub-bg);
+  color: var(--pub-text);
+  font-family: var(--font-body);
+  min-height: 100vh;
+}
+
+// ─── Section Layout ───────────────────────────────────
+.section {
+  padding: var(--pub-section-padding) 0;
+  @include breakpoint(md) { padding: 64px 0; }
+  @include breakpoint(sm) { padding: 48px 0; }
+  &--alt  { background: var(--pub-bg-alt); }
+  &--dark { background: var(--pub-bg-dark); color: var(--pub-text-light); }
+}
+
+.container {
+  width: 100%;
+  max-width: var(--pub-max-width);
+  margin: 0 auto;
+  padding: 0 var(--space-xl);
+  @include breakpoint(md) { padding: 0 var(--space-lg); }
+  @include breakpoint(sm) { padding: 0 var(--space-md); }
+}
+
+// ─── Section Header ───────────────────────────────────
+.section-header {
+  margin-bottom: 64px;
+  @include breakpoint(md) { margin-bottom: 40px; }
+  &--center { text-align: center; }
+
+  &__eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: .75rem; font-weight: 500; letter-spacing: .2em;
+    text-transform: uppercase; color: var(--pub-gold); margin-bottom: var(--space-md);
+    &::before, &::after { content: ''; display: block; width: 32px; height: 1px; background: var(--pub-gold); opacity: .5; }
+  }
+  &__title {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 400; line-height: 1.15;
+    color: var(--pub-text); margin-bottom: var(--space-lg);
+    em { font-style: italic; color: var(--pub-gold); }
+  }
+  &__subtitle {
+    font-size: 1.05rem; color: var(--pub-text-sec); max-width: 560px; line-height: 1.7;
+    .section-header--center & { margin: 0 auto; }
+  }
+}
+
+// ─── Buttons ─────────────────────────────────────────
+.btn-gold {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 14px 32px; background: var(--pub-gold); color: #fff;
+  border: none; border-radius: var(--pub-radius); font-size: .875rem; font-weight: 500;
+  letter-spacing: .06em; text-transform: uppercase; text-decoration: none;
+  cursor: pointer; transition: all .3s ease;
+  &:hover { background: var(--pub-gold-light); color: #fff; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.15); }
+  .arrow { transition: transform .3s ease; }
+  &:hover .arrow { transform: translateX(4px); }
+}
+
+.btn-outline {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 13px 31px; background: transparent; color: var(--pub-text);
+  border: 1px solid var(--pub-border); border-radius: var(--pub-radius);
+  font-size: .875rem; font-weight: 500; letter-spacing: .06em;
+  text-transform: uppercase; text-decoration: none; cursor: pointer; transition: all .3s ease;
+  &:hover { border-color: var(--pub-gold); color: var(--pub-gold); }
+  &--white { color: var(--pub-text-light); border-color: rgba(255,255,255,.3); &:hover { border-color: var(--pub-gold-light); color: var(--pub-gold-light); } }
+}
+
+// ─── Gold Divider ─────────────────────────────────────
+.gold-divider {
+  display: flex; align-items: center; gap: 16px; margin: 24px 0;
+  &::before, &::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--pub-gold), transparent); opacity: .4; }
+  &__gem { color: var(--pub-gold); font-size: .8rem; }
+}
+
+// ─── Animations ───────────────────────────────────────
+@keyframes pub-fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pub-fadeIn { from { opacity: 0; } to   { opacity: 1; } }
+.animate-up { animation: pub-fadeUp .7s ease forwards; }
+.animate-in { animation: pub-fadeIn .5s ease forwards; }

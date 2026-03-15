@@ -1,0 +1,207 @@
+// src/app/features/admin/dashboard/dashboard.component.scss
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins';
+
+.dashboard {
+  @include flex(column, stretch, flex-start, var(--space-xl));
+  animation: fadeIn 0.4s ease;
+
+  &__header {
+    @include flex(row, flex-start, space-between);
+  }
+
+  &__title {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 400;
+    margin-bottom: var(--space-xs);
+  }
+
+  &__subtitle {
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+  }
+
+  // ─── Stat Cards ─────────────────────────────────────
+  &__stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-lg);
+
+    @include breakpoint(xl)  { grid-template-columns: repeat(2, 1fr); }
+    @include breakpoint(sm)  { grid-template-columns: 1fr; }
+  }
+
+  // ─── Bottom Grid ────────────────────────────────────
+  &__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-lg);
+
+    @include breakpoint(lg) { grid-template-columns: 1fr; }
+  }
+
+  &__panel {
+    @include card;
+  }
+
+  &__panel-title {
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-lg);
+  }
+}
+
+// ─── Stat Card ────────────────────────────────────────
+.stat-card {
+  @include flex(row, center, flex-start, var(--space-md));
+  @include card;
+  @include hover-lift;
+  text-decoration: none;
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    opacity: 0.06;
+    transform: translate(20px, -20px);
+  }
+
+  &--gold  { &::after { background: var(--color-gold); } .stat-card__icon { color: var(--color-gold); } }
+  &--info  { &::after { background: var(--color-info); } .stat-card__icon { color: var(--color-info); } }
+  &--warning { &::after { background: var(--color-warning); } .stat-card__icon { color: var(--color-warning); } }
+  &--success { &::after { background: var(--color-success); } .stat-card__icon { color: var(--color-success); } }
+
+  &__icon {
+    font-size: 1.6rem;
+    width: 48px; height: 48px;
+    @include flex(row, center, center);
+    background: var(--color-bg-hover);
+    border-radius: var(--radius-md);
+    flex-shrink: 0;
+  }
+
+  &__body {
+    @include flex(column, flex-start, flex-start, 4px);
+    flex: 1;
+  }
+
+  &__value {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 400;
+    line-height: 1;
+    color: var(--color-text-primary);
+  }
+
+  &__label {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    font-weight: 400;
+  }
+
+  &__arrow {
+    color: var(--color-text-muted);
+    font-size: 1.2rem;
+    transition: transform var(--transition-base);
+  }
+
+  &:hover &__arrow { transform: translateX(4px); }
+
+  // Skeleton
+  &--skeleton {
+    pointer-events: none;
+    background: var(--color-bg-card);
+    min-height: 90px;
+    animation: pulse 1.5s ease infinite;
+  }
+}
+
+// ─── Quick Links ──────────────────────────────────────
+.quick-links {
+  @include flex(column, stretch, flex-start, var(--space-sm));
+}
+
+.quick-link {
+  @include flex(row, center, flex-start, var(--space-md));
+  padding: var(--space-md);
+  background: var(--color-bg-hover);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  transition: all var(--transition-fast);
+
+  &:hover {
+    border-color: var(--color-gold);
+    background: var(--color-gold-muted);
+
+    .quick-link__arrow { color: var(--color-gold); transform: translateX(3px); }
+  }
+
+  &__icon {
+    font-size: 1.1rem;
+    color: var(--color-gold);
+    width: 32px; height: 32px;
+    @include flex(row, center, center);
+    background: var(--color-gold-muted);
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+  }
+
+  &__body {
+    @include flex(column, flex-start, flex-start, 2px);
+    flex: 1;
+  }
+
+  &__label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
+  }
+
+  &__desc {
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+  }
+
+  &__arrow {
+    color: var(--color-text-muted);
+    font-size: 1.2rem;
+    transition: all var(--transition-fast);
+  }
+}
+
+// ─── Info List ────────────────────────────────────────
+.info-list {
+  @include flex(column, stretch, flex-start, var(--space-sm));
+
+  &__item {
+    @include flex(row, center, space-between);
+    padding: var(--space-sm) 0;
+    border-bottom: 1px solid var(--color-border);
+    &:last-child { border-bottom: none; }
+  }
+
+  &__label {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50%       { opacity: 0.3; }
+}

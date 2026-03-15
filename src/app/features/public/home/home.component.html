@@ -1,0 +1,30 @@
+<!-- home.component.html -->
+
+<!-- BUG FIX: [heroData]="homeData()?.hero ?? null" — explicit null fallback
+     ensure karta hai ki ngOnChanges properly fire ho jab data aaye -->
+
+<app-hero
+  [heroData]="homeData()?.hero ?? null">
+</app-hero>
+
+<app-stats-bar
+  [stats]="stats">
+</app-stats-bar>
+
+<app-about-teaser
+  [aboutData]="homeData()?.aboutTeaser ?? null">
+</app-about-teaser>
+
+<app-services-section
+  [services]="services()">
+</app-services-section>
+
+<app-portfolio-section
+  [portfolio]="portfolio()">
+</app-portfolio-section>
+
+<app-testimonials-section
+  [testimonials]="testimonials()">
+</app-testimonials-section>
+
+<app-cta-banner></app-cta-banner>

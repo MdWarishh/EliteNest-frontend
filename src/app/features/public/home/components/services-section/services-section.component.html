@@ -1,0 +1,45 @@
+<!-- services-section.component.html -->
+<section class="section section--alt services" #servicesSection>
+  <div class="container">
+
+    <div class="section-header section-header--center" #sectionHeader>
+      <p class="section-header__eyebrow">What We Offer</p>
+      <h2 class="section-header__title">Our <em>Services</em></h2>
+      <p class="section-header__subtitle">
+        From concept to completion, we deliver exceptional interior design solutions
+        tailored to your lifestyle and budget.
+      </p>
+    </div>
+
+    <div class="services__grid" #servicesGrid>
+
+      @if (services.length > 0) {
+        @for (svc of services; track svc._id) {
+          <div class="service-card">
+            <div class="service-card__icon">{{ svc.icon || '◇' }}</div>
+            <h3 class="service-card__title">{{ svc.title }}</h3>
+            <p class="service-card__desc">{{ svc.shortDescription }}</p>
+            @if (svc.features?.length) {
+              <ul class="service-card__features">
+                @for (f of svc.features.slice(0, 3); track f) {
+                  <li>{{ f }}</li>
+                }
+              </ul>
+            }
+            <div class="service-card__hover-line"></div>
+          </div>
+        }
+      } @else {
+        @for (svc of placeholderServices; track svc.title) {
+          <div class="service-card">
+            <div class="service-card__icon">{{ svc.icon }}</div>
+            <h3 class="service-card__title">{{ svc.title }}</h3>
+            <p class="service-card__desc">{{ svc.desc }}</p>
+            <div class="service-card__hover-line"></div>
+          </div>
+        }
+      }
+
+    </div>
+  </div>
+</section>

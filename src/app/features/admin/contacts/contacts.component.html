@@ -1,0 +1,74 @@
+<!-- contacts.component.html -->
+<div class="page">
+  <div class="page__header">
+    <div>
+      <h1 class="page__title">Contacts</h1>
+      <p class="page__subtitle">{{ items().length }} messages @if (newCount > 0) { — <span class="text-gold">{{ newCount }} new</span> }</p>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="skeleton-list">@for (i of [1,2,3,4]; track i){<div class="skeleton-row"></div>}</div>
+  } @else if (items().length === 0) {
+    <div class="empty-state"><span class="empty-state__icon">◌</span><p>No contact messages yet</p></div>
+  } @else {
+    <div class="inbox">
+      <!-- List -->
+      <div class="inbox__list">
+        @for (item of items(); track item._id) {
+          <div class="inbox-item" [class.inbox-item--active]="selected()?._id === item._id"
+            [class.inbox-item--new]="item.status === 'new'" (click)="select(item)">
+            <div class="inbox-item__avatar">{{ item.name?.charAt(0) || '?' }}</div>
+            <div class="inbox-item__body">
+              <div class="inbox-item__name">{{ item.name }}</div>
+              <div class="inbox-item__subject">{{ item.subject || item.message?.substring(0,40) }}</div>
+            </div>
+            <div class="inbox-item__meta">
+              <span class="badge" [class]="statusColor(item.status)">{{ item.status }}</span>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Detail -->
+      @if (selected()) {
+        <div class="inbox__detail">
+          <div class="contact-detail">
+            <div class="contact-detail__header">
+              <div class="contact-detail__avatar">{{ selected()!.name?.charAt(0) }}</div>
+              <div>
+                <div class="contact-detail__name">{{ selected()!.name }}</div>
+                <div class="contact-detail__email">{{ selected()!.email }}</div>
+              </div>
+              <span class="badge" [class]="statusColor(selected()!.status)">{{ selected()!.status }}</span>
+            </div>
+
+            <div class="contact-detail__grid">
+              @if (selected()!.phone)       { <div class="contact-detail__field"><span class="label">Phone</span><span>{{ selected()!.phone }}</span></div> }
+              @if (selected()!.projectType) { <div class="contact-detail__field"><span class="label">Project</span><span>{{ selected()!.projectType }}</span></div> }
+              @if (selected()!.budget)      { <div class="contact-detail__field"><span class="label">Budget</span><span>{{ selected()!.budget }}</span></div> }
+              @if (selected()!.location)    { <div class="contact-detail__field"><span class="label">Location</span><span>{{ selected()!.location }}</span></div> }
+            </div>
+
+            <div class="contact-detail__message">
+              <div class="label" style="margin-bottom:8px">Message</div>
+              <p>{{ selected()!.message }}</p>
+            </div>
+
+            <div class="contact-detail__actions">
+              <span style="font-size:.8rem;color:var(--color-text-muted)">Update status:</span>
+              @for (s of statuses; track s) {
+                <button class="status-btn" [class.status-btn--active]="selected()!.status === s"
+                  (click)="updateStatus(selected()!._id, s)">{{ s }}</button>
+              }
+            </div>
+          </div>
+        </div>
+      } @else {
+        <div class="inbox__placeholder">
+          <span>◌</span><p>Select a message to view</p>
+        </div>
+      }
+    </div>
+  }
+</div>

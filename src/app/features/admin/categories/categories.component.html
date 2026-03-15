@@ -1,0 +1,83 @@
+<!-- categories.component.html -->
+<div class="page">
+  <div class="page__header">
+    <div>
+      <h1 class="page__title">Categories</h1>
+      <p class="page__subtitle">{{ items().length }} categories</p>
+    </div>
+    <button class="btn-primary" (click)="openCreate()">+ Add Category</button>
+  </div>
+
+  @if (loading()) {
+    <div class="skeleton-list">
+      @for (i of [1,2,3]; track i) { <div class="skeleton-row"></div> }
+    </div>
+  } @else {
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr><th>Icon</th><th>Name</th><th>Description</th><th>Sort</th><th>Status</th><th>Actions</th></tr>
+        </thead>
+        <tbody>
+          @for (cat of items(); track cat._id) {
+            <tr>
+              <td><span style="font-size:1.4rem">{{ cat.icon || '⬡' }}</span></td>
+              <td><span class="fw-500">{{ cat.name }}</span></td>
+              <td class="text-muted">{{ cat.description || '—' }}</td>
+              <td class="text-muted">{{ cat.sortOrder }}</td>
+              <td><span class="badge" [class]="cat.isActive ? 'badge--success' : 'badge--error'">{{ cat.isActive ? 'Active' : 'Inactive' }}</span></td>
+              <td>
+                <div class="action-btns">
+                  <button class="action-btn action-btn--edit" (click)="openEdit(cat)">✎</button>
+                  <button class="action-btn action-btn--delete" (click)="confirmDelete(cat._id)">✕</button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
+
+<!-- Slide-in Form Panel -->
+@if (showForm()) {
+  <div class="panel-backdrop" (click)="showForm.set(false)">
+    <div class="panel" (click)="$event.stopPropagation()">
+      <div class="panel__header">
+        <h2 class="panel__title">{{ editItem() ? 'Edit Category' : 'New Category' }}</h2>
+        <button class="panel__close" (click)="showForm.set(false)">✕</button>
+      </div>
+
+      @if (error()) { <div class="form-error-banner">⚠ {{ error() }}</div> }
+
+      <div class="form-group">
+        <label class="form-label form-label--required">Name</label>
+        <input class="form-input" type="text" [(ngModel)]="form.name" placeholder="e.g. Living Room" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Icon (emoji)</label>
+        <input class="form-input" type="text" [(ngModel)]="form.icon" placeholder="🛋️" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Description</label>
+        <textarea class="form-textarea" [(ngModel)]="form.description" rows="3" placeholder="Short description..."></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Sort Order</label>
+        <input class="form-input" type="number" [(ngModel)]="form.sortOrder" />
+      </div>
+
+      <div class="panel__actions">
+        <button class="btn-secondary" (click)="showForm.set(false)">Cancel</button>
+        <button class="btn-primary" (click)="onSubmit()" [disabled]="saving()">
+          {{ saving() ? 'Saving...' : (editItem() ? 'Update' : 'Create') }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<app-confirm-modal [visible]="!!deleteId()" title="Delete Category?"
+  message="All portfolios in this category may be affected."
+  [loading]="deleting()" (confirm)="doDelete()" (cancel)="cancelDelete()" />

@@ -1,0 +1,56 @@
+<!-- hero.component.html -->
+<section class="hero" #heroSection>
+
+  <!-- Carousel slides (background images) -->
+  <div class="hero__slides">
+    @for (slide of heroSlides(); track slide; let i = $index) {
+      <div
+        class="hero__slide"
+        [class.hero__slide--active]="i === activeSlide()"
+        [style.background-image]="'url(' + slide + ')'"
+      ></div>
+    }
+    @if (heroSlides().length === 0) {
+      <div class="hero__slide hero__slide--active hero__slide--fallback"></div>
+    }
+  </div>
+
+  <!-- Overlay & pattern -->
+  <div class="hero__overlay"></div>
+  <div class="hero__pattern"></div>
+
+  <!-- Content -->
+  <div class="hero__content container">
+    <p class="hero__eyebrow" #eyebrow>✦ Premium Interior Design Studio</p>
+    <h1 class="hero__title" #title [innerHTML]="hero.headline"></h1>
+    <p class="hero__subtitle" #subtitle>{{ hero.subHeadline }}</p>
+    <div class="hero__actions" #actions>
+      <a class="btn-gold" routerLink="/portfolio">
+        {{ hero.ctaText || 'Explore Our Work' }}
+        <span class="arrow">→</span>
+      </a>
+      <a class="btn-outline btn-outline--white" routerLink="/contact">Book Consultation</a>
+    </div>
+    <div class="hero__scroll-hint" #scrollHint>
+      <span class="hero__scroll-line"></span>
+      <span class="hero__scroll-text">Scroll</span>
+    </div>
+  </div>
+
+  <!-- Carousel dots -->
+  @if (heroSlides().length > 1) {
+    <div class="hero__dots">
+      @for (slide of heroSlides(); track slide; let i = $index) {
+        <button
+          class="hero__dot"
+          [class.hero__dot--active]="i === activeSlide()"
+          (click)="goToSlide(i)"
+          [attr.aria-label]="'Slide ' + (i + 1)"
+        ></button>
+      }
+    </div>
+    <button class="hero__arrow hero__arrow--prev" (click)="prevSlide()" aria-label="Previous">‹</button>
+    <button class="hero__arrow hero__arrow--next" (click)="nextSlide()" aria-label="Next">›</button>
+  }
+
+</section>

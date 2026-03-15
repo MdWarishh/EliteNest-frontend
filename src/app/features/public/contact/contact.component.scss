@@ -1,0 +1,114 @@
+// contact.component.scss
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins';
+@import '../_public-shared';
+
+.contact-page { background: var(--pub-bg); }
+
+.page-hero {
+  position: relative; min-height: 300px; @include flex(column, center, center);
+
+  // ✅ #1a1208, #2d1f0e → var(--pub-bg-dark)
+  &__bg { position: absolute; inset: 0; background: linear-gradient(135deg, var(--pub-bg-dark), var(--pub-bg-dark)); }
+  &__content { position: relative; z-index: 2; text-align: center; padding-top: 80px; }
+  &__eyebrow { font-size: .75rem; letter-spacing: .25em; text-transform: uppercase; color: var(--pub-gold); margin-bottom: 12px; }
+  &__title { font-family: var(--font-heading); font-size: clamp(3rem, 8vw, 5rem); font-weight: 300; color: var(--pub-bg); margin-bottom: 12px;
+    em { font-style: italic; color: var(--pub-gold); }
+  }
+  &__sub { color: rgba(247,244,239,.6); }
+}
+
+.contact-grid {
+  display: grid; grid-template-columns: 1fr 1.6fr; gap: 80px; align-items: start;
+  @include breakpoint(md) { grid-template-columns: 1fr; gap: 48px; }
+}
+
+.contact-info {
+  &__title { font-family: var(--font-heading); font-size: 1.8rem; font-weight: 400; color: var(--pub-text); margin-bottom: 16px; line-height: 1.3; }
+  &__text  { color: var(--pub-text-sec); line-height: 1.75; margin-bottom: 36px; }
+  &__promise {
+    @include flex(row, flex-start, flex-start, 12px);
+    padding: 16px; background: var(--pub-gold-muted);
+    border: 1px solid rgba(184,147,74,.2); border-radius: 4px;
+    margin-top: 36px;
+    &-icon { color: var(--pub-gold); flex-shrink: 0; }
+    p { font-size: .85rem; color: var(--pub-text-sec); line-height: 1.6; }
+  }
+}
+
+.contact-details { @include flex(column, flex-start, flex-start, 20px); }
+
+.contact-detail-item {
+  @include flex(row, flex-start, flex-start, 16px);
+  &__icon { font-size: 1.2rem; width: 40px; height: 40px; background: var(--pub-gold-muted); border: 1px solid rgba(184,147,74,.2); border-radius: 50%; @include flex(row, center, center); flex-shrink: 0; }
+  &__label { font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--pub-text-muted); margin-bottom: 2px; }
+  &__val { font-size: .95rem; color: var(--pub-text); }
+}
+
+.contact-form-wrap { }
+
+.contact-form {
+  background: var(--pub-bg-card); border: 1px solid var(--pub-border);
+  border-radius: 8px; padding: 48px;
+  @include breakpoint(sm) { padding: 24px; }
+  &__title { font-family: var(--font-heading); font-size: 1.6rem; font-weight: 400; color: var(--pub-text); margin-bottom: 28px; }
+}
+
+.form-error-msg {
+  background: rgba(224,90,90,.08); border: 1px solid rgba(224,90,90,.2);
+  border-radius: 4px; padding: 12px 16px;
+  color: #c0392b; font-size: .875rem; margin-bottom: 20px;
+}
+
+.form-row {
+  display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-lg);
+  margin-bottom: var(--space-lg);
+  @include breakpoint(sm) { grid-template-columns: 1fr; }
+}
+
+.form-group {
+  @include flex(column, flex-start, flex-start, 8px);
+  margin-bottom: var(--space-lg);
+}
+
+.form-label { font-size: .8rem; font-weight: 500; letter-spacing: .04em; color: var(--pub-text-sec); }
+
+.form-input, .form-select, .form-textarea {
+  width: 100%; padding: 12px 16px;
+  // ✅ background already var(--pub-bg) — theek hai
+  background: var(--pub-bg); border: 1px solid var(--pub-border);
+  border-radius: 4px; color: var(--pub-text); font-size: .9rem;
+  outline: none; transition: border-color .2s, box-shadow .2s;
+  font-family: var(--font-body);
+  &::placeholder { color: var(--pub-text-muted); }
+  &:focus { border-color: var(--pub-gold); box-shadow: 0 0 0 3px rgba(184,147,74,.1); }
+}
+.form-textarea { resize: vertical; min-height: 120px; line-height: 1.6; }
+
+// ✅ option background: #fff → var(--pub-bg-card)
+.form-select { cursor: pointer; option { background: var(--pub-bg-card); } }
+
+.btn-submit {
+  width: 100%; padding: 16px;
+  background: linear-gradient(135deg, var(--pub-gold), var(--pub-gold-light));
+  border: none; border-radius: 4px;
+  color: #fff; font-size: .9rem; font-weight: 500;
+  letter-spacing: .06em; text-transform: uppercase;
+  cursor: pointer; @include flex(row, center, center, 10px);
+  transition: opacity .25s, transform .25s;
+  .arrow { transition: transform .25s; }
+  &:hover:not(:disabled) { opacity: .9; transform: translateY(-2px); .arrow { transform: translateX(4px); } }
+  &:disabled { opacity: .6; cursor: not-allowed; }
+  &__spinner { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.3); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; }
+}
+
+.contact-success {
+  // ✅ already var(--pub-bg-card) — theek hai
+  background: var(--pub-bg-card); border: 1px solid rgba(184,147,74,.3);
+  border-radius: 8px; padding: 64px 48px; text-align: center;
+  &__icon { font-size: 3rem; color: var(--pub-gold); margin-bottom: 20px; }
+  &__title { font-family: var(--font-heading); font-size: 2rem; color: var(--pub-text); margin-bottom: 12px; }
+  &__text { color: var(--pub-text-sec); line-height: 1.7; max-width: 400px; margin: 0 auto; }
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }

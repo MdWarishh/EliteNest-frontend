@@ -1,0 +1,222 @@
+<div class="admin-page theme-page">
+
+  <!-- Header -->
+  <div class="admin-page-header">
+    <div>
+      <h1 class="admin-page-title">Theme Customizer</h1>
+      <p class="admin-page-sub">Customize your website's colors, fonts, and layout in real-time.</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn-admin-ghost" (click)="reset()" [disabled]="resetting()">
+        {{ resetting() ? 'Resetting...' : '↺ Reset Defaults' }}
+      </button>
+      <button class="btn-admin-primary" (click)="save()" [disabled]="saving()">
+        @if (saving()) { <span class="btn-spin"></span> Saving... }
+        @else if (saved()) { ✓ Saved! }
+        @else { Save & Apply }
+      </button>
+    </div>
+  </div>
+
+  <div class="theme-layout">
+
+    <!-- LEFT: Controls -->
+    <div class="theme-controls">
+
+      <!-- Preset Themes -->
+      <div class="theme-section">
+        <h3 class="theme-section__title">Quick Presets</h3>
+        <div class="presets-grid">
+          @for (preset of presets; track preset.name) {
+            <button class="preset-card" (click)="applyPreset(preset); updatePreview()">
+              <div class="preset-card__swatch">
+                <div class="preset-card__c1" [style.background]="preset.colors.primaryGold"></div>
+                <div class="preset-card__c2" [style.background]="preset.colors.bgMain"></div>
+                <div class="preset-card__c3" [style.background]="preset.colors.bgDark"></div>
+              </div>
+              <span class="preset-card__name">{{ preset.icon }} {{ preset.name }}</span>
+            </button>
+          }
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="theme-tabs">
+        <button class="theme-tab" [class.active]="activeTab()==='colors'"     (click)="activeTab.set('colors')">🎨 Colors</button>
+        <button class="theme-tab" [class.active]="activeTab()==='typography'" (click)="activeTab.set('typography')">✦ Typography</button>
+        <button class="theme-tab" [class.active]="activeTab()==='layout'"     (click)="activeTab.set('layout')">⊞ Layout</button>
+      </div>
+
+      <!-- Colors Tab -->
+      @if (activeTab()==='colors') {
+        @for (group of colorGroups; track group) {
+          <div class="theme-section">
+            <h4 class="theme-section__subtitle">{{ group }}</h4>
+            @for (field of groupFields(group); track field.key) {
+              <div class="color-row">
+                <div class="color-row__preview">
+                  <input type="color" class="color-picker" [(ngModel)]="colors[field.key]" (input)="updatePreview()" />
+                  <div class="color-row__swatch" [style.background]="colors[field.key]"></div>
+                </div>
+                <div class="color-row__info">
+                  <span class="color-row__label">{{ field.label }}</span>
+                  <input type="text" class="color-row__hex" [(ngModel)]="colors[field.key]" (input)="updatePreview()" placeholder="#000000" />
+                </div>
+              </div>
+            }
+          </div>
+        }
+      }
+
+      <!-- Typography Tab -->
+      @if (activeTab()==='typography') {
+        <div class="theme-section">
+          <h4 class="theme-section__subtitle">Fonts</h4>
+
+          <div class="form-group">
+            <label class="form-label">Heading Font</label>
+            <select class="form-select" [(ngModel)]="typography.headingFont" (change)="updatePreview()">
+              @for (font of fonts; track font) { <option [value]="font">{{ font }}</option> }
+            </select>
+          </div>
+          <div class="form-group" style="margin-top:16px">
+            <label class="form-label">Body Font</label>
+            <select class="form-select" [(ngModel)]="typography.bodyFont" (change)="updatePreview()">
+              @for (font of fonts; track font) { <option [value]="font">{{ font }}</option> }
+            </select>
+          </div>
+          <div class="form-group" style="margin-top:16px">
+            <label class="form-label">Heading Weight</label>
+            <select class="form-select" [(ngModel)]="typography.headingWeight" (change)="updatePreview()">
+              <option value="200">200 — Thin</option>
+              <option value="300">300 — Light</option>
+              <option value="400">400 — Regular</option>
+              <option value="500">500 — Medium</option>
+              <option value="600">600 — SemiBold</option>
+              <option value="700">700 — Bold</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin-top:16px">
+            <label class="form-label">Base Font Size</label>
+            <select class="form-select" [(ngModel)]="typography.baseFontSize" (change)="updatePreview()">
+              <option value="14px">14px — Small</option>
+              <option value="15px">15px — Compact</option>
+              <option value="16px">16px — Default</option>
+              <option value="17px">17px — Comfortable</option>
+              <option value="18px">18px — Large</option>
+            </select>
+          </div>
+        </div>
+      }
+
+      <!-- Layout Tab -->
+      @if (activeTab()==='layout') {
+        <div class="theme-section">
+          <h4 class="theme-section__subtitle">Spacing & Shape</h4>
+
+          <div class="form-group">
+            <label class="form-label">Border Radius</label>
+            <div class="range-row">
+              <input type="range" min="0" max="24" step="2" class="range-input"
+                [value]="layout.borderRadius.replace('px','')"
+                (input)="layout.borderRadius = $any($event.target).value + 'px'; updatePreview()" />
+              <span class="range-val">{{ layout.borderRadius }}</span>
+            </div>
+            <div class="radius-previews">
+              <div class="radius-box" [style.border-radius]="layout.borderRadius">Card</div>
+              <div class="radius-box" [style.border-radius]="layout.borderRadius">Button</div>
+              <div class="radius-box" [style.border-radius]="layout.borderRadius">Input</div>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-top:24px">
+            <label class="form-label">Section Vertical Padding</label>
+            <div class="range-row">
+              <input type="range" min="40" max="160" step="10" class="range-input"
+                [value]="layout.sectionPadding.replace('px','')"
+                (input)="layout.sectionPadding = $any($event.target).value + 'px'; updatePreview()" />
+              <span class="range-val">{{ layout.sectionPadding }}</span>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-top:24px">
+            <label class="form-label">Max Content Width</label>
+            <select class="form-select" [(ngModel)]="layout.maxWidth" (change)="updatePreview()">
+              <option value="1100px">1100px — Narrow</option>
+              <option value="1200px">1200px — Standard</option>
+              <option value="1280px">1280px — Default</option>
+              <option value="1400px">1400px — Wide</option>
+              <option value="1536px">1536px — Full Wide</option>
+            </select>
+          </div>
+        </div>
+      }
+
+    </div>
+
+    <!-- RIGHT: Live Preview -->
+    <div class="theme-preview">
+      <div class="theme-preview__label">Live Preview</div>
+      <div class="theme-preview-card" (change)="updatePreview()">
+
+        <!-- Preview Navbar -->
+        <div class="prev-nav" [style.background]="colors.bgCard" [style.border-color]="colors.borderColor">
+          <span class="prev-nav__logo" [style.color]="colors.textPrimary" [style.font-family]="''+typography.headingFont+', serif'">EliteNest</span>
+          <div class="prev-nav__links">
+            <span [style.color]="colors.textSecondary">Portfolio</span>
+            <span [style.color]="colors.textSecondary">Services</span>
+            <span class="prev-nav__cta" [style.background]="colors.primaryGold">Contact</span>
+          </div>
+        </div>
+
+        <!-- Preview Hero -->
+        <div class="prev-hero" [style.background]="colors.bgDark">
+          <div class="prev-hero__tag" [style.border-color]="colors.primaryGold" [style.color]="colors.primaryGold">Premium Design Studio</div>
+          <div class="prev-hero__title" [style.color]="colors.bgCard" [style.font-family]="''+typography.headingFont+', serif'" [style.font-weight]="typography.headingWeight">
+            Transform Your <em [style.color]="colors.primaryGold">Space</em>
+          </div>
+          <div class="prev-hero__sub" [style.color]="colors.textMuted">Luxury interior design tailored to your vision.</div>
+          <div class="prev-hero__btns">
+            <div class="prev-btn-fill" [style.background]="colors.primaryGold">View Portfolio</div>
+            <div class="prev-btn-outline" [style.border-color]="colors.bgCard" [style.color]="colors.bgCard">Our Services</div>
+          </div>
+        </div>
+
+        <!-- Preview Cards Section -->
+        <div class="prev-section" [style.background]="colors.bgMain">
+          <div class="prev-section__label" [style.color]="colors.primaryGold">Our Services</div>
+          <div class="prev-section__title" [style.color]="colors.textPrimary" [style.font-family]="''+typography.headingFont+', serif'">Design Excellence</div>
+          <div class="prev-cards">
+            @for (c of ['Living Room','Bedroom','Kitchen']; track c) {
+              <div class="prev-card" [style.background]="colors.bgCard" [style.border-color]="colors.borderColor" [style.border-radius]="layout.borderRadius">
+                <div class="prev-card__icon" [style.color]="colors.primaryGold">✦</div>
+                <div class="prev-card__title" [style.color]="colors.textPrimary" [style.font-family]="''+typography.headingFont+', serif'">{{ c }}</div>
+                <div class="prev-card__text" [style.color]="colors.textSecondary">Premium design solutions for your space.</div>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Preview Footer -->
+        <div class="prev-footer" [style.background]="colors.bgDark">
+          <span [style.color]="colors.primaryGold" [style.font-family]="''+typography.headingFont+', serif'">EliteNest</span>
+          <span [style.color]="colors.textMuted" style="font-size:.75rem">© 2025 All rights reserved</span>
+        </div>
+
+      </div>
+
+      <!-- Color palette strip -->
+      <div class="theme-palette-strip">
+        @for (field of colorFields; track field.key) {
+          <div class="palette-dot" [style.background]="colors[field.key]" [title]="field.label + ': ' + colors[field.key]"></div>
+        }
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Save Banner -->
+  @if (saved()) {
+    <div class="save-banner">✓ Theme saved! Your website will now show the updated design.</div>
+  }
+</div>

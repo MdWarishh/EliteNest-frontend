@@ -1,0 +1,56 @@
+// about-manager.component.scss
+// Upload zone aur form styles home-manager ke saath same pattern follow karte hain
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins';
+@import '../_admin-shared';
+
+.upload-zone {
+  position: relative;
+  border: 2px dashed var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color .2s;
+
+  &:hover { border-color: var(--primary); }
+
+  &--sm { min-height: 160px; }
+
+  &__img {
+    width: 100%;
+    max-height: 380px;
+    object-fit: cover;
+    display: block;
+  }
+
+  &__overlay {
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,.45);
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: .9rem;
+    opacity: 0; transition: opacity .2s;
+  }
+
+  &:hover &__overlay { opacity: 1; }
+
+  &__empty {
+    display: flex; flex-direction: column;
+    align-items: center; gap: 8px;
+    padding: 32px; text-align: center;
+  }
+
+  &__icon  { font-size: 2.4rem; }
+  &__label { font-weight: 500; color: var(--text); font-size: .95rem; }
+  &__hint  { font-size: .78rem; color: var(--text-muted); }
+}
+
+.form-hint {
+  font-size: .78rem;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}

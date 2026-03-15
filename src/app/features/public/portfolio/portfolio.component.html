@@ -1,0 +1,80 @@
+<!-- portfolio.component.html -->
+<div class="port-page">
+
+  <!-- Page Hero -->
+  <div class="page-hero">
+    <div class="page-hero__bg"></div>
+    <div class="page-hero__content container">
+      <p class="page-hero__eyebrow">Our Work</p>
+      <h1 class="page-hero__title">Portfolio</h1>
+      <p class="page-hero__sub">Explore our collection of thoughtfully designed spaces</p>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="port-filters">
+    <div class="container">
+      <div class="port-filters__inner">
+        <button class="filter-btn" [class.filter-btn--active]="activeCategory() === ''"
+          (click)="filterBy('')">All Projects</button>
+        @for (cat of categories(); track cat._id) {
+          <button class="filter-btn" [class.filter-btn--active]="activeCategory() === cat._id"
+            (click)="filterBy(cat._id)">{{ cat.icon }} {{ cat.name }}</button>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Grid -->
+  <section class="section">
+    <div class="container">
+      @if (loading()) {
+        <div class="port-skeleton">
+          @for (i of [1,2,3,4,5,6]; track i) { <div class="port-skeleton__item"></div> }
+        </div>
+      } @else if (items().length === 0) {
+        <div class="port-empty">
+          <span>◈</span>
+          <p>No projects found in this category</p>
+          <button class="filter-btn filter-btn--active" (click)="filterBy('')">View All</button>
+        </div>
+      } @else {
+        <div class="port-grid">
+          @for (item of items(); track item._id) {
+            <div class="port-card" [routerLink]="['/portfolio', item.slug]">
+              <div class="port-card__img">
+                @if (item.thumbnail?.url) {
+                  <img [src]="item.thumbnail.url" [alt]="item.title" loading="lazy" />
+                } @else {
+                  <div class="port-card__placeholder">◈</div>
+                }
+              </div>
+              <div class="port-card__overlay">
+                <span class="port-card__cat">{{ item.category?.name }}</span>
+                <h3 class="port-card__title">{{ item.title }}</h3>
+                <div class="port-card__meta">
+                  @if (item.projectDetails?.location) { <span>📍 {{ item.projectDetails.location }}</span> }
+                  @if (item.projectDetails?.style)    { <span>◈ {{ item.projectDetails.style }}</span> }
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Pagination -->
+        @if (totalPages > 1) {
+          <div class="port-pagination">
+            <button class="port-page-btn" (click)="prevPage()" [disabled]="page() === 1">← Prev</button>
+            <div class="port-page-dots">
+              @for (p of [].constructor(totalPages); track $index) {
+                <button class="port-page-dot" [class.port-page-dot--active]="page() === $index + 1"
+                  (click)="page.set($index + 1); load()"></button>
+              }
+            </div>
+            <button class="port-page-btn" (click)="nextPage()" [disabled]="page() === totalPages">Next →</button>
+          </div>
+        }
+      }
+    </div>
+  </section>
+</div>

@@ -1,0 +1,135 @@
+// portfolio-form.component.scss
+@import '../../../../../styles/variables';
+@import '../../../../../styles/mixins';
+@import '../../_admin-shared';
+
+.form-error-banner {
+  background: rgba(224,90,90,.1); border: 1px solid rgba(224,90,90,.3);
+  border-radius: var(--radius-md); padding: var(--space-md);
+  color: var(--color-error); font-size: .875rem;
+}
+
+.form-section__desc {
+  font-size: .82rem; color: var(--color-text-muted);
+  margin-bottom: var(--space-lg); margin-top: -12px;
+}
+
+// ─── Upload Zone ──────────────────────────────────────
+.upload-zone {
+  position: relative;
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-lg);
+  cursor: pointer; overflow: hidden;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+  min-height: 160px;
+  @include flex(row, center, center);
+  background: var(--color-bg-secondary);
+
+  &:hover {
+    border-color: var(--color-gold);
+    background: var(--color-gold-muted);
+  }
+
+  &--multi { min-height: 100px; margin-bottom: var(--space-md); }
+
+  &__preview {
+    width: 100%; max-height: 320px;
+    object-fit: cover; display: block;
+    border-radius: var(--radius-md);
+  }
+
+  &__replace {
+    position: absolute; inset: 0;
+    @include flex(row, center, center);
+    background: rgba(0,0,0,.5);
+    color: #fff; font-size: .875rem;
+    font-weight: 500; letter-spacing: .06em;
+    text-transform: uppercase;
+    opacity: 0; transition: opacity .2s;
+  }
+  &:hover &__replace { opacity: 1; }
+
+  &__placeholder {
+    @include flex(column, center, center, var(--space-sm));
+    color: var(--color-text-muted); padding: var(--space-xl);
+    text-align: center;
+  }
+
+  &__icon { font-size: 2.5rem; }
+  &__text { font-size: .9rem; color: var(--color-text-secondary); font-weight: 500; }
+  &__hint { font-size: .78rem; color: var(--color-text-muted); }
+}
+
+// ─── Gallery Grid ─────────────────────────────────────
+.gallery-label {
+  font-size: .75rem; font-weight: 500; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--color-text-muted);
+  margin-bottom: var(--space-md);
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.gallery-item {
+  position: relative; border-radius: var(--radius-md); overflow: hidden;
+  border: 1px solid var(--color-border);
+  aspect-ratio: 4/3;
+
+  img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+  }
+
+  &__info {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: rgba(0,0,0,.6); color: #fff;
+    font-size: .7rem; padding: 4px 6px;
+    @include truncate(1);
+  }
+
+  &__remove {
+    position: absolute; top: 4px; right: 4px;
+    width: 22px; height: 22px;
+    background: rgba(224,90,90,.9); border: none; border-radius: 50%;
+    color: #fff; font-size: .7rem; cursor: pointer;
+    @include flex(row, center, center);
+    transition: background .2s;
+    &:hover { background: var(--color-error); }
+  }
+}
+
+// ─── Toggle ───────────────────────────────────────────
+.toggle-group { @include flex(column, stretch, flex-start, var(--space-md)); }
+.toggle-item {
+  @include flex(row, center, space-between);
+  padding: var(--space-md); background: var(--color-bg-hover);
+  border-radius: var(--radius-md); border: 1px solid var(--color-border);
+  &__label { font-size: .875rem; font-weight: 500; color: var(--color-text-primary); }
+  &__desc  { font-size: .78rem; color: var(--color-text-muted); margin-top: 2px; }
+}
+
+.toggle-switch {
+  position: relative; cursor: pointer;
+  input { position: absolute; opacity: 0; width: 0; height: 0; }
+  &__track {
+    display: block; width: 44px; height: 24px;
+    background: var(--color-border-light); border-radius: var(--radius-full);
+    transition: background var(--transition-base); position: relative;
+    &::after {
+      content: ''; position: absolute; top: 3px; left: 3px;
+      width: 18px; height: 18px; background: #fff; border-radius: 50%;
+      transition: transform var(--transition-base);
+    }
+  }
+  input:checked + &__track { background: var(--color-gold); &::after { transform: translateX(20px); } }
+}
+
+.saving-spinner {
+  width: 14px; height: 14px; border: 2px solid rgba(0,0,0,.3);
+  border-top-color: #0e0e0e; border-radius: 50%;
+  animation: spin .7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }

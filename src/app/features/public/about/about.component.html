@@ -1,0 +1,146 @@
+<!-- about.component.html -->
+<div class="about-page">
+
+  <!-- ══ PAGE HERO ════════════════════════════════════════ -->
+  <div class="page-hero" [class.page-hero--has-img]="aboutData()?.heroImage?.url">
+    <!-- Background image (admin se) ya fallback gradient -->
+    @if (aboutData()?.heroImage?.url) {
+      <div
+        class="page-hero__bg page-hero__bg--img"
+        [style.background-image]="'url(' + aboutData().heroImage.url + ')'"
+      ></div>
+    } @else {
+      <div class="page-hero__bg"></div>
+    }
+    <div class="page-hero__overlay"></div>
+    <div class="page-hero__content container">
+      <p class="page-hero__eyebrow">Our Story</p>
+      <h1 class="page-hero__title">About <em>EliteNest</em></h1>
+      <p class="page-hero__sub">
+        {{ aboutData()?.heroSubtitle || 'Passionate designers crafting extraordinary living spaces' }}
+      </p>
+    </div>
+  </div>
+
+  <!-- ══ STORY SECTION ════════════════════════════════════ -->
+  <section class="section">
+    <div class="container">
+      <div class="story-grid">
+
+        <!-- Visual (admin image ya placeholder) -->
+        <div class="story-grid__visual">
+          <div class="story-visual">
+            <div class="story-visual__main">
+              @if (aboutData()?.storyImage?.url) {
+                <img
+                  class="story-visual__img"
+                  [src]="aboutData().storyImage.url"
+                  alt="Our Story"
+                />
+              } @else {
+                <div class="story-visual__placeholder">◈</div>
+              }
+            </div>
+            <div class="story-visual__accent"></div>
+          </div>
+        </div>
+
+        <!-- Text body -->
+        <div class="story-grid__body">
+          <div class="section-header">
+            <p class="section-header__eyebrow">Who We Are</p>
+            <h2 class="section-header__title">
+              {{ aboutData()?.storyHeading || 'Transforming Spaces,' }}
+              <em>{{ aboutData()?.storyHeadingEm || 'Elevating Lives' }}</em>
+            </h2>
+          </div>
+          <p class="story-text">
+            {{ aboutData()?.storyPara1 || 'Founded over a decade ago, EliteNest has grown from a small design studio to one of the most sought-after interior design firms in the country. We believe that beautiful spaces don\'t just look good — they make life better.' }}
+          </p>
+          <p class="story-text">
+            {{ aboutData()?.storyPara2 || 'Our approach combines deep listening, creative vision, and meticulous execution. Every project is a collaboration between our designers and our clients, resulting in spaces that feel both personal and extraordinary.' }}
+          </p>
+          <div class="story-highlights">
+            <div class="story-highlight">
+              <span class="story-highlight__num">250+</span>
+              <span class="story-highlight__label">Projects</span>
+            </div>
+            <div class="story-highlight">
+              <span class="story-highlight__num">12+</span>
+              <span class="story-highlight__label">Years</span>
+            </div>
+            <div class="story-highlight">
+              <span class="story-highlight__num">8</span>
+              <span class="story-highlight__label">Cities</span>
+            </div>
+          </div>
+          <a class="btn-gold" routerLink="/contact">Work With Us <span class="arrow">→</span></a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ VALUES ════════════════════════════════════════════ -->
+  <section class="section section--alt values-section">
+    <div class="container">
+      <div class="section-header section-header--center">
+        <p class="section-header__eyebrow">What Drives Us</p>
+        <h2 class="section-header__title">Our <em>Core Values</em></h2>
+      </div>
+      <div class="values-grid">
+        @for (v of values; track v.title) {
+          <div class="value-card">
+            <div class="value-card__icon">{{ v.icon }}</div>
+            <h3 class="value-card__title">{{ v.title }}</h3>
+            <p class="value-card__desc">{{ v.desc }}</p>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ TEAM ══════════════════════════════════════════════ -->
+  @if (team().length > 0) {
+    <section class="section team-section">
+      <div class="container">
+        <div class="section-header section-header--center">
+          <p class="section-header__eyebrow">The People</p>
+          <h2 class="section-header__title">Meet Our <em>Team</em></h2>
+          <p class="section-header__subtitle">Passionate designers and project managers dedicated to your vision.</p>
+        </div>
+        <div class="team-grid">
+          @for (member of team(); track member._id) {
+            <div class="team-card">
+              <div class="team-card__avatar">
+                @if (member.avatar?.url) {
+                  <img [src]="member.avatar.url" [alt]="member.name" />
+                } @else {
+                  <span>{{ member.name.charAt(0) }}</span>
+                }
+              </div>
+              <h3 class="team-card__name">{{ member.name }}</h3>
+              <p class="team-card__role">{{ member.designation }}</p>
+              @if (member.bio) { <p class="team-card__bio">{{ member.bio }}</p> }
+            </div>
+          }
+        </div>
+      </div>
+    </section>
+  }
+
+  <!-- ══ CTA ═══════════════════════════════════════════════ -->
+  <section class="section section--dark" style="background:#1a1612; text-align:center;">
+    <div class="container">
+      <p class="section-header__eyebrow" style="color:#b8934a">Ready to Begin?</p>
+      <h2 class="section-header__title" style="color:#f7f4ef; max-width:540px; margin:0 auto 20px;">
+        Let's Build Your <em>Dream Space</em>
+      </h2>
+      <p style="color:rgba(247,244,239,.6); max-width:440px; margin:0 auto 36px; line-height:1.7;">
+        Get in touch for a free consultation and let us show you what's possible.
+      </p>
+      <a class="btn-gold" routerLink="/contact">Start a Project <span class="arrow">→</span></a>
+    </div>
+  </section>
+
+</div>

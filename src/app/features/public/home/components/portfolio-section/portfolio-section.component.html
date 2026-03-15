@@ -1,0 +1,43 @@
+<!-- portfolio-section.component.html -->
+<section class="section portfolio-section" #portfolioSection>
+
+  <div class="container">
+    <div class="section-header" #sectionHeader>
+      <p class="section-header__eyebrow">Our Work</p>
+      <h2 class="section-header__title">Featured <em>Projects</em></h2>
+      <p class="section-header__subtitle">A glimpse into our world of extraordinary interiors.</p>
+    </div>
+  </div>
+
+  @if (portfolio.length > 0) {
+    <div class="portfolio-grid container" #portfolioGrid>
+      @for (item of portfolio; track item._id; let i = $index) {
+        <div class="portfolio-card" [class.portfolio-card--large]="i === 0">
+          <div class="portfolio-card__img">
+            @if (item.thumbnail?.url) {
+              <img [src]="item.thumbnail.url" [alt]="item.title" loading="lazy" />
+            } @else {
+              <div class="portfolio-card__placeholder">◈</div>
+            }
+          </div>
+          <div class="portfolio-card__overlay">
+            <span class="portfolio-card__cat">{{ item.category?.name }}</span>
+            <h3 class="portfolio-card__title">{{ item.title }}</h3>
+            @if (item.projectDetails?.style) {
+              <span class="portfolio-card__style">{{ item.projectDetails.style }}</span>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="portfolio-empty container">
+      <p>Add portfolio items from the admin panel to display them here.</p>
+    </div>
+  }
+
+  <div class="portfolio-section__cta container" #ctaRow>
+    <a class="btn-outline" routerLink="/portfolio">View All Projects <span>→</span></a>
+  </div>
+
+</section>

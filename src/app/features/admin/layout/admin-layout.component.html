@@ -1,0 +1,20 @@
+<!-- src/app/features/admin/layout/admin-layout.component.html -->
+<div class="admin-shell" [class.admin-shell--collapsed]="sidebarCollapsed()">
+
+  <app-admin-sidebar
+    [collapsed]="sidebarCollapsed()"
+    (toggleCollapse)="toggleSidebar()"
+  />
+
+  <div class="admin-shell__main">
+    <app-admin-topbar
+      [admin]="auth.admin()"
+      (toggleSidebar)="toggleSidebar()"
+    />
+
+    <main class="admin-shell__content">
+      <router-outlet />
+    </main>
+  </div>
+
+</div>

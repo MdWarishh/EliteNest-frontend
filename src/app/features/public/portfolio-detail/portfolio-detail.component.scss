@@ -1,0 +1,51 @@
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins';
+@import '../_public-shared';
+
+.pd-loading { min-height:60vh; @include flex(row,center,center); }
+.spinner { width:44px; height:44px; border:3px solid var(--pub-border); border-top-color:var(--pub-gold); border-radius:50%; animation:spin .8s linear infinite; }
+@keyframes spin { to{transform:rotate(360deg)} }
+
+.pd-hero { min-height: 520px; background: var(--pub-bg-dark) center/cover no-repeat; position: relative; @include flex(column,flex-end,flex-start);
+  &__overlay { position:absolute; inset:0; background:linear-gradient(to top, rgba(0,0,0,.75) 0%, rgba(0,0,0,.2) 100%); }
+  &__content { position:relative; padding-bottom:60px; }
+  &__title { font-family:var(--font-heading); font-size:clamp(2.2rem,5vw,3.8rem); font-weight:300; color:#fff; margin:12px 0; line-height:1.1; }
+  &__sub { color:rgba(255,255,255,.75); font-size:1rem; max-width:560px; }
+}
+.pd-back { display:inline-block; color:rgba(255,255,255,.6); font-size:.8rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase; text-decoration:none; margin-bottom:16px; padding:8px 0; &:hover{color:#fff;} }
+.pd-cat { background:var(--pub-gold); color:#fff; font-size:.72rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; padding:4px 12px; border-radius:100px; }
+
+.pd-meta-bar { background:#fff; border-bottom:1px solid var(--pub-border);
+  &__inner { @include flex(row,center,flex-start,0); flex-wrap:wrap; }
+}
+.pd-meta { padding:20px 28px; border-right:1px solid var(--pub-border); @include flex(column,flex-start,flex-start,4px);
+  &__label { font-size:.68rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--pub-text-muted); }
+  &__val { font-size:.95rem; font-weight:500; color:var(--pub-text); }
+}
+
+.pd-gallery {
+  &__grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; @include breakpoint(md){grid-template-columns:repeat(2,1fr);} @include breakpoint(sm){grid-template-columns:1fr;} }
+  &__item { position:relative; overflow:hidden; border-radius:12px; cursor:pointer; aspect-ratio:4/3;
+    &.featured { grid-column:span 2; grid-row:span 2; @include breakpoint(sm){grid-column:span 1;grid-row:span 1;} }
+    img { width:100%; height:100%; object-fit:cover; transition:transform .4s; }
+    &:hover img { transform:scale(1.05); }
+    &:hover .pd-gallery__zoom { opacity:1; }
+  }
+  &__zoom { position:absolute; inset:0; @include flex(row,center,center); background:rgba(0,0,0,.4); opacity:0; transition:opacity .2s; font-size:1.5rem; }
+}
+
+.pd-tags { @include flex(row,center,flex-start,10px); flex-wrap:wrap; padding:12px 0; }
+.pd-tag { padding:6px 14px; border:1px solid var(--pub-border); border-radius:100px; font-size:.8rem; color:var(--pub-text-sec); }
+
+.pd-cta { background:var(--pub-text); text-align:center; padding:100px 0;
+  &__title { font-family:var(--font-heading); font-size:clamp(1.8rem,4vw,3rem); color:#fff; margin-bottom:12px; }
+  &__sub { color:rgba(255,255,255,.65); margin-bottom:36px; }
+  &__btns { @include flex(row,center,center,16px); flex-wrap:wrap; }
+}
+.btn-gold { display:inline-block; background:var(--pub-gold); color:#fff; padding:14px 36px; border-radius:4px; font-weight:600; font-size:.9rem; letter-spacing:.1em; text-transform:uppercase; text-decoration:none; transition:background .2s; &:hover{background:var(--pub-gold-light);} }
+.btn-outline { display:inline-block; border:1px solid rgba(255,255,255,.4); color:#fff; padding:14px 36px; border-radius:4px; font-weight:600; font-size:.9rem; letter-spacing:.1em; text-transform:uppercase; text-decoration:none; transition:border-color .2s; &:hover{border-color:#fff;} }
+
+.lightbox { position:fixed; inset:0; background:rgba(0,0,0,.93); z-index:9999; @include flex(row,center,center); padding:20px;
+  img { max-width:92vw; max-height:90vh; object-fit:contain; border-radius:8px; }
+  &__close { position:absolute; top:20px; right:20px; background:rgba(255,255,255,.15); border:none; color:#fff; width:40px; height:40px; border-radius:50%; font-size:1.1rem; cursor:pointer; &:hover{background:rgba(255,255,255,.3);} }
+}

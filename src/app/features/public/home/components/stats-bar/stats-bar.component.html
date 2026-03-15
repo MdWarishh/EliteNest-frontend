@@ -1,0 +1,34 @@
+<!-- stats-bar.component.html -->
+<section class="stats-bar" #statsSection>
+  <div class="container">
+    <div class="stats-bar__grid">
+
+      <div class="stat-item" #statItem>
+        <span class="stat-item__num">{{ stats.projectsCompleted }}+</span>
+        <span class="stat-item__label">Projects Completed</span>
+      </div>
+
+      <div class="stat-item__divider"></div>
+
+      <div class="stat-item" #statItem>
+        <span class="stat-item__num">{{ stats.happyClients }}+</span>
+        <span class="stat-item__label">Happy Clients</span>
+      </div>
+
+      <div class="stat-item__divider"></div>
+
+      <div class="stat-item" #statItem>
+        <span class="stat-item__num">{{ stats.yearsExperience }}+</span>
+        <span class="stat-item__label">Years Experience</span>
+      </div>
+
+      <div class="stat-item__divider"></div>
+
+      <div class="stat-item" #statItem>
+        <span class="stat-item__num">{{ stats.citiesCovered }}</span>
+        <span class="stat-item__label">Cities Covered</span>
+      </div>
+
+    </div>
+  </div>
+</section>

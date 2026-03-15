@@ -1,0 +1,53 @@
+<!-- about-teaser.component.html -->
+<section class="section about-teaser" #aboutSection>
+  <div class="container">
+    <div class="about-teaser__grid">
+
+      <!-- Visual side -->
+      <div class="about-teaser__visual" #visual>
+        <div class="about-teaser__img-wrap">
+          @if (aboutData?.image?.url) {
+            <img
+              class="about-teaser__img"
+              [src]="aboutData.image.url"
+              alt="About EliteNest"
+            />
+          } @else {
+            <div class="about-teaser__img-placeholder">
+              <span class="about-teaser__img-icon">◈</span>
+            </div>
+          }
+          <div class="about-teaser__badge" #badge>
+            <span class="about-teaser__badge-num">12</span>
+            <span class="about-teaser__badge-text">Years of Excellence</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Body side -->
+      <div class="about-teaser__body" #body>
+        <div class="section-header">
+          <p class="section-header__eyebrow">About Us</p>
+          <h2 class="section-header__title"
+            [innerHTML]="aboutData?.heading || 'Where Design Meets <em>Passion</em>'">
+          </h2>
+          <p class="section-header__subtitle">
+            {{ aboutData?.description || 'We believe every space has a story waiting to be told. Our team of expert designers brings your vision to life with meticulous attention to detail, blending aesthetics with functionality.' }}
+          </p>
+        </div>
+
+        <ul class="about-teaser__features" #featureList>
+          <li><span class="checkmark">✦</span> Personalised design consultations</li>
+          <li><span class="checkmark">✦</span> End-to-end project management</li>
+          <li><span class="checkmark">✦</span> Premium material sourcing</li>
+          <li><span class="checkmark">✦</span> On-time delivery guarantee</li>
+        </ul>
+
+        <a class="btn-gold" routerLink="/about" #ctaBtn>
+          Our Story <span class="arrow">→</span>
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>

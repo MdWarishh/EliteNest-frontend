@@ -1,0 +1,33 @@
+<!-- testimonials-section.component.html -->
+@if (testimonials.length > 0) {
+  <section class="section section--alt testimonials" #testimonialsSection>
+    <div class="container">
+
+      <div class="section-header section-header--center" #sectionHeader>
+        <p class="section-header__eyebrow">Client Love</p>
+        <h2 class="section-header__title">What Our <em>Clients</em> Say</h2>
+      </div>
+
+      <div class="testimonials__grid" #testimonialsGrid>
+        @for (t of testimonials; track t._id) {
+          <div class="testimonial-card">
+            <div class="testimonial-card__stars">
+              @for (s of stars(t.rating); track $index) {
+                <span>★</span>
+              }
+            </div>
+            <blockquote class="testimonial-card__text">"{{ t.review }}"</blockquote>
+            <div class="testimonial-card__author">
+              <div class="testimonial-card__avatar">{{ t.clientName.charAt(0) }}</div>
+              <div>
+                <div class="testimonial-card__name">{{ t.clientName }}</div>
+                <div class="testimonial-card__role">{{ t.clientDesignation }}</div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+
+    </div>
+  </section>
+}

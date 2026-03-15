@@ -1,0 +1,212 @@
+// src/app/features/admin/layout/sidebar/sidebar.component.scss
+@import '../../../../../styles/variables';
+@import '../../../../../styles/mixins';
+
+.sidebar {
+  width: var(--sidebar-width);
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  @include flex(column, stretch, flex-start);
+  background: var(--color-bg-secondary);
+  border-right: 1px solid var(--color-border);
+  overflow: hidden;
+  transition: width var(--transition-slow);
+  z-index: 100;
+
+  &--collapsed {
+    width: var(--sidebar-width-collapsed);
+
+    .sidebar__logo-text,
+    .sidebar__user,
+    .sidebar__nav-label,
+    .sidebar__nav-badge { display: none; }
+
+    .sidebar__toggle { margin-left: auto; margin-right: auto; }
+    .sidebar__logo   { justify-content: center; padding: var(--space-md); }
+    .sidebar__nav-item { justify-content: center; padding: 14px; }
+    .sidebar__logout { justify-content: center; }
+  }
+
+  // ─── Logo ───────────────────────────────────────────
+  &__logo {
+    @include flex(row, center, flex-start, var(--space-sm));
+    padding: var(--space-lg) var(--space-lg);
+    min-height: var(--topbar-height);
+    border-bottom: 1px solid var(--color-border);
+
+    &-icon {
+      font-size: 1.3rem;
+      color: var(--color-gold);
+      flex-shrink: 0;
+    }
+
+    &-text {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      color: var(--color-text-primary);
+      white-space: nowrap;
+      flex: 1;
+    }
+  }
+
+  &__toggle {
+    margin-left: auto;
+    width: 28px;
+    height: 28px;
+    @include flex(row, center, center);
+    background: var(--color-bg-hover);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-muted);
+    font-size: 1.2rem;
+    line-height: 1;
+    flex-shrink: 0;
+    transition: all var(--transition-fast);
+
+    &:hover {
+      background: var(--color-gold-muted);
+      border-color: var(--color-gold);
+      color: var(--color-gold);
+    }
+  }
+
+  // ─── User Info ──────────────────────────────────────
+  &__user {
+    @include flex(row, center, flex-start, var(--space-sm));
+    padding: var(--space-md) var(--space-lg);
+    margin: var(--space-sm) var(--space-md);
+    background: var(--color-bg-hover);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+
+    &-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--color-gold), var(--color-gold-dark));
+      @include flex(row, center, center);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #0e0e0e;
+      flex-shrink: 0;
+    }
+
+    &-info {
+      @include flex(column, flex-start, flex-start, 2px);
+      min-width: 0;
+    }
+
+    &-name {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--color-text-primary);
+      @include truncate(1);
+    }
+
+    &-role {
+      font-size: 0.72rem;
+      color: var(--color-gold);
+      text-transform: capitalize;
+      letter-spacing: 0.04em;
+    }
+  }
+
+  // ─── Divider ────────────────────────────────────────
+  &__divider {
+    height: 1px;
+    background: var(--color-border);
+    margin: var(--space-sm) var(--space-md);
+  }
+
+  // ─── Nav ────────────────────────────────────────────
+  &__nav {
+    flex: 1;
+    @include flex(column, stretch, flex-start, 2px);
+    padding: var(--space-sm) var(--space-md);
+    overflow-y: auto;
+    @include scrollbar;
+
+    &-item {
+      @include flex(row, center, flex-start, var(--space-md));
+      padding: 11px var(--space-md);
+      border-radius: var(--radius-md);
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 400;
+      transition: all var(--transition-fast);
+      white-space: nowrap;
+      position: relative;
+
+      &:hover {
+        background: var(--color-bg-hover);
+        color: var(--color-text-primary);
+      }
+
+      &--active {
+        background: var(--color-gold-muted);
+        color: var(--color-gold);
+        font-weight: 500;
+
+        &::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 25%;
+          bottom: 25%;
+          width: 3px;
+          background: var(--color-gold);
+          border-radius: 0 3px 3px 0;
+        }
+      }
+    }
+
+    &-icon {
+      font-size: 1rem;
+      width: 20px;
+      text-align: center;
+      flex-shrink: 0;
+      opacity: 0.8;
+    }
+
+    &-label { flex: 1; }
+
+    &-badge {
+      background: var(--color-gold);
+      color: #0e0e0e;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 1px 7px;
+      border-radius: var(--radius-full);
+      min-width: 20px;
+      text-align: center;
+    }
+  }
+
+  // ─── Footer / Logout ────────────────────────────────
+  &__footer {
+    @include flex(column, stretch);
+    padding-bottom: var(--space-sm);
+  }
+
+  &__logout {
+    @include flex(row, center, flex-start, var(--space-md));
+    padding: 11px var(--space-lg);
+    margin: 0 var(--space-md);
+    background: none;
+    border: none;
+    color: var(--color-text-muted);
+    font-size: 0.875rem;
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+    width: calc(100% - var(--space-lg));
+
+    &:hover {
+      background: rgba(224, 90, 90, 0.1);
+      color: var(--color-error);
+    }
+  }
+}

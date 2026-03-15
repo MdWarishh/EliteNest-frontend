@@ -1,0 +1,61 @@
+<!-- services.component.html -->
+<div class="page">
+  <div class="page__header">
+    <div><h1 class="page__title">Services</h1><p class="page__subtitle">{{ items().length }} services</p></div>
+    <button class="btn-primary" (click)="openCreate()">+ Add Service</button>
+  </div>
+
+  @if (loading()) {
+    <div class="skeleton-list">@for (i of [1,2,3]; track i){<div class="skeleton-row"></div>}</div>
+  } @else {
+    <div class="services-grid">
+      @for (svc of items(); track svc._id) {
+        <div class="service-card">
+          <div class="service-card__icon">{{ svc.icon || '◇' }}</div>
+          <div class="service-card__body">
+            <div class="service-card__title">{{ svc.title }}</div>
+            <p class="service-card__desc">{{ svc.shortDescription }}</p>
+            @if (svc.features?.length) {
+              <div class="service-card__features">
+                @for (f of svc.features.slice(0,3); track f) { <span class="feature-tag">{{ f }}</span> }
+              </div>
+            }
+          </div>
+          <div class="service-card__actions">
+            @if (svc.isFeatured) { <span class="badge badge--gold">Featured</span> }
+            <span class="badge" [class]="svc.isActive ? 'badge--success' : 'badge--error'">{{ svc.isActive ? 'Active' : 'Inactive' }}</span>
+            <div class="action-btns">
+              <button class="action-btn action-btn--edit" (click)="openEdit(svc)">✎</button>
+              <button class="action-btn action-btn--delete" (click)="confirmDelete(svc._id)">✕</button>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>
+
+@if (showForm()) {
+  <div class="panel-backdrop" (click)="showForm.set(false)">
+    <div class="panel" (click)="$event.stopPropagation()">
+      <div class="panel__header">
+        <h2 class="panel__title">{{ editItem() ? 'Edit Service' : 'New Service' }}</h2>
+        <button class="panel__close" (click)="showForm.set(false)">✕</button>
+      </div>
+      @if (error()) { <div class="form-error-banner">⚠ {{ error() }}</div> }
+      <div class="form-group"><label class="form-label form-label--required">Title</label><input class="form-input" [(ngModel)]="form.title" placeholder="Service name" /></div>
+      <div class="form-group"><label class="form-label">Icon (emoji)</label><input class="form-input" [(ngModel)]="form.icon" placeholder="🏠" /></div>
+      <div class="form-group"><label class="form-label">Short Description</label><input class="form-input" [(ngModel)]="form.shortDescription" placeholder="One line summary" /></div>
+      <div class="form-group"><label class="form-label">Full Description</label><textarea class="form-textarea" [(ngModel)]="form.description" rows="3" placeholder="Detailed description..."></textarea></div>
+      <div class="form-group"><label class="form-label">Features</label><input class="form-input" [(ngModel)]="form.features" placeholder="Feature 1, Feature 2, Feature 3" /><span class="form-hint">Comma separated</span></div>
+      <div class="form-group"><label class="form-label">Sort Order</label><input class="form-input" type="number" [(ngModel)]="form.sortOrder" /></div>
+      <div class="panel__actions">
+        <button class="btn-secondary" (click)="showForm.set(false)">Cancel</button>
+        <button class="btn-primary" (click)="onSubmit()" [disabled]="saving()">{{ saving() ? 'Saving...' : (editItem() ? 'Update' : 'Create') }}</button>
+      </div>
+    </div>
+  </div>
+}
+
+<app-confirm-modal [visible]="!!deleteId()" title="Delete Service?" message="This will remove the service."
+  [loading]="deleting()" (confirm)="doDelete()" (cancel)="cancelDelete()" />

@@ -1,0 +1,84 @@
+<!-- blog-list.component.html -->
+<div class="page">
+  <div class="page__header">
+    <div>
+      <h1 class="page__title">Blog Posts</h1>
+      <p class="page__subtitle">{{ total() }} posts total</p>
+    </div>
+    <a class="btn-primary" routerLink="/admin/blogs/new">+ New Post</a>
+  </div>
+
+  @if (loading()) {
+    <div class="skeleton-list">
+      @for (i of [1,2,3,4]; track i) { <div class="skeleton-row"></div> }
+    </div>
+  } @else if (items().length === 0) {
+    <div class="empty-state">
+      <span class="empty-state__icon">◉</span>
+      <p>No blog posts yet</p>
+      <a class="btn-primary" routerLink="/admin/blogs/new">Write First Post</a>
+    </div>
+  } @else {
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Author</th>
+            <th>Read Time</th>
+            <th>Views</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (blog of items(); track blog._id) {
+            <tr>
+              <td>
+                <div class="project-cell">
+                  @if (blog.featuredImage?.url) {
+                    <img class="project-cell__thumb" [src]="blog.featuredImage!.url" [alt]="blog.title" />
+                  } @else {
+                    <div class="project-cell__placeholder">◉</div>
+                  }
+                  <div>
+                    <div class="project-cell__name">{{ blog.title }}</div>
+                    <div class="project-cell__slug">{{ blog.slug }}</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="badge badge--info">{{ blog.category }}</span></td>
+              <td class="text-muted">{{ blog.author }}</td>
+              <td class="text-muted">{{ blog.readTime }} min</td>
+              <td class="text-muted">{{ blog.viewCount }}</td>
+              <td>
+                <span class="badge" [class]="blog.isPublished ? 'badge--success' : 'badge--warning'">
+                  {{ blog.isPublished ? 'Published' : 'Draft' }}
+                </span>
+              </td>
+              <td>
+                <div class="action-btns">
+                  <a class="action-btn action-btn--edit" [routerLink]="['/admin/blogs', blog._id, 'edit']">✎</a>
+                  <button class="action-btn action-btn--delete" (click)="confirmDelete(blog._id)">✕</button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    @if (totalPages > 1) {
+      <div class="pagination">
+        <button class="pagination__btn" (click)="prevPage()" [disabled]="page() === 1">← Prev</button>
+        <span class="pagination__info">Page {{ page() }} of {{ totalPages }}</span>
+        <button class="pagination__btn" (click)="nextPage()" [disabled]="page() === totalPages">Next →</button>
+      </div>
+    }
+  }
+</div>
+
+<app-confirm-modal [visible]="!!deleteId()" title="Delete Post?"
+  message="This will permanently delete the blog post."
+  [loading]="deleting()" (confirm)="doDelete()" (cancel)="cancelDelete()" />

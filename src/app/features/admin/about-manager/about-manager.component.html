@@ -1,0 +1,104 @@
+<!-- about-manager.component.html -->
+<div class="form-page">
+  <div class="page__header">
+    <div>
+      <h1 class="page__title">About Manager</h1>
+      <p class="page__subtitle">Edit hero image, story section & content</p>
+    </div>
+    <button class="btn-primary" (click)="onSave()" [disabled]="saving()">
+      @if (saving())      { <span class="btn-spinner"></span> Saving... }
+      @else if (saved())  { ✓ Saved! }
+      @else               { Save Changes }
+    </button>
+  </div>
+
+  @if (error()) { <div class="alert alert--error">⚠ {{ error() }}</div> }
+
+  @if (loading()) {
+    <div class="skeleton-list">
+      @for (i of [1,2,3]; track i) { <div class="skeleton-row" style="height:180px"></div> }
+    </div>
+  } @else {
+
+  <!-- ══ HERO IMAGE ══════════════════════════════════════ -->
+  <div class="form-section">
+    <h2 class="form-section__title">🖼 Hero Background Image</h2>
+    <p class="form-hint">Yeh image About page ke top banner mein background mein dikhegi. Recommended: 1920×600px landscape.</p>
+
+    <div class="upload-zone" (click)="heroInput.click()">
+      @if (heroPreview() || existingHero()) {
+        <img [src]="heroPreview() || existingHero()" class="upload-zone__img" alt="Hero" />
+        <div class="upload-zone__overlay">🔄 Click to replace image</div>
+      } @else {
+        <div class="upload-zone__empty">
+          <div class="upload-zone__icon">🖼</div>
+          <div class="upload-zone__label">Upload Hero Background Image</div>
+          <div class="upload-zone__hint">Recommended 1920×600px · JPG / WebP</div>
+        </div>
+      }
+    </div>
+    <input #heroInput type="file" accept="image/*" style="display:none" (change)="pickFile('hero', $event)" />
+
+    <div class="form-section__grid" style="margin-top:20px">
+      <div class="form-group form-group--full">
+        <label class="form-label">Hero Subtitle</label>
+        <input
+          class="form-input"
+          [(ngModel)]="form.heroSubtitle"
+          placeholder="Passionate designers crafting extraordinary living spaces"
+        />
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ STORY IMAGE ═════════════════════════════════════ -->
+  <div class="form-section">
+    <h2 class="form-section__title">📷 Story Section Image (Who We Are)</h2>
+    <p class="form-hint">Yeh image "Who We Are" section ke baayein column mein dikhegi. Recommended: 600×800px portrait.</p>
+
+    <div class="upload-zone upload-zone--sm" (click)="storyInput.click()">
+      @if (storyPreview() || existingStory()) {
+        <img [src]="storyPreview() || existingStory()" class="upload-zone__img" style="max-height:280px" alt="Story" />
+        <div class="upload-zone__overlay">🔄 Click to replace</div>
+      } @else {
+        <div class="upload-zone__empty">
+          <div class="upload-zone__icon">📷</div>
+          <div class="upload-zone__label">Upload Story Section Image</div>
+          <div class="upload-zone__hint">Recommended 600×800px portrait</div>
+        </div>
+      }
+    </div>
+    <input #storyInput type="file" accept="image/*" style="display:none" (change)="pickFile('story', $event)" />
+  </div>
+
+  <!-- ══ STORY TEXT ══════════════════════════════════════ -->
+  <div class="form-section">
+    <h2 class="form-section__title">✍ Story Text Content</h2>
+    <div class="form-section__grid">
+      <div class="form-group">
+        <label class="form-label">Heading</label>
+        <input class="form-input" [(ngModel)]="form.storyHeading" placeholder="Transforming Spaces," />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Heading Italic Part</label>
+        <input class="form-input" [(ngModel)]="form.storyHeadingEm" placeholder="Elevating Lives" />
+      </div>
+      <div class="form-group form-group--full">
+        <label class="form-label">Paragraph 1</label>
+        <textarea class="form-textarea" rows="3" [(ngModel)]="form.storyPara1"></textarea>
+      </div>
+      <div class="form-group form-group--full">
+        <label class="form-label">Paragraph 2</label>
+        <textarea class="form-textarea" rows="3" [(ngModel)]="form.storyPara2"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <button class="btn-primary" (click)="onSave()" [disabled]="saving()">
+      @if (saving()) { <span class="btn-spinner"></span> Saving... } @else { Save All Changes }
+    </button>
+  </div>
+
+  }<!-- end @else -->
+</div>

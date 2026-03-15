@@ -1,0 +1,101 @@
+<div class="public-page">
+  @if (loading()) {
+    <div class="pd-loading"><div class="spinner"></div></div>
+  } @else if (!project()) {
+    <div class="container" style="padding:120px 0;text-align:center">
+      <h2>Project not found</h2><br>
+      <a routerLink="/portfolio" class="back-link">← Back to Portfolio</a>
+    </div>
+  } @else {
+
+  <!-- Hero -->
+  <section class="pd-hero" [style.background-image]="project().thumbnail?.url ? 'url('+project().thumbnail.url+')' : ''">
+    <div class="pd-hero__overlay"></div>
+    <div class="container pd-hero__content">
+      <a routerLink="/portfolio" class="pd-back">← Portfolio</a>
+      @if (project().category?.name) {
+        <span class="pd-cat">{{ project().category.name }}</span>
+      }
+      <h1 class="pd-hero__title">{{ project().title }}</h1>
+      @if (project().shortDescription) {
+        <p class="pd-hero__sub">{{ project().shortDescription }}</p>
+      }
+    </div>
+  </section>
+
+  <!-- Project Details Bar -->
+  @if (project().projectDetails) {
+  <div class="pd-meta-bar">
+    <div class="container pd-meta-bar__inner">
+      @if (project().projectDetails.location) {
+        <div class="pd-meta"><span class="pd-meta__label">Location</span><span class="pd-meta__val">{{ project().projectDetails.location }}</span></div>
+      }
+      @if (project().projectDetails.area) {
+        <div class="pd-meta"><span class="pd-meta__label">Area</span><span class="pd-meta__val">{{ project().projectDetails.area }}</span></div>
+      }
+      @if (project().projectDetails.style) {
+        <div class="pd-meta"><span class="pd-meta__label">Style</span><span class="pd-meta__val">{{ project().projectDetails.style }}</span></div>
+      }
+      @if (project().projectDetails.year) {
+        <div class="pd-meta"><span class="pd-meta__label">Year</span><span class="pd-meta__val">{{ project().projectDetails.year }}</span></div>
+      }
+      @if (project().projectDetails.duration) {
+        <div class="pd-meta"><span class="pd-meta__label">Duration</span><span class="pd-meta__val">{{ project().projectDetails.duration }}</span></div>
+      }
+      @if (project().projectDetails.budget) {
+        <div class="pd-meta"><span class="pd-meta__label">Budget</span><span class="pd-meta__val">{{ project().projectDetails.budget }}</span></div>
+      }
+    </div>
+  </div>
+  }
+
+  <!-- Gallery -->
+  @if (allImages().length > 0) {
+  <section class="section pd-gallery">
+    <div class="container">
+      <h2 class="section-title">Project Gallery</h2>
+      <div class="pd-gallery__grid">
+        @for (img of allImages(); track img; let i = $index) {
+          <div class="pd-gallery__item" [class.featured]="i===0" (click)="openLightbox(img)">
+            <img [src]="img" alt="Project image {{ i+1 }}" loading="lazy" />
+            <div class="pd-gallery__zoom">🔍</div>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+  }
+
+  <!-- Tags -->
+  @if (project().tags?.length) {
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <div class="pd-tags">
+        @for (tag of project().tags; track tag) { <span class="pd-tag">{{ tag }}</span> }
+      </div>
+    </div>
+  </section>
+  }
+
+  <!-- CTA -->
+  <section class="pd-cta">
+    <div class="container">
+      <h2 class="pd-cta__title">Love This Project?</h2>
+      <p class="pd-cta__sub">Let's create something equally stunning for your space.</p>
+      <div class="pd-cta__btns">
+        <a routerLink="/contact" class="btn-gold">Start Your Project</a>
+        <a routerLink="/portfolio" class="btn-outline">View More Work</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Lightbox -->
+  @if (lightbox()) {
+    <div class="lightbox" (click)="closeLightbox()">
+      <button class="lightbox__close" (click)="closeLightbox()">✕</button>
+      <img [src]="lightbox()" alt="Full view" (click)="$event.stopPropagation()" />
+    </div>
+  }
+
+  }
+</div>

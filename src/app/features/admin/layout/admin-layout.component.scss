@@ -1,0 +1,37 @@
+// src/app/features/admin/layout/admin-layout.component.scss
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins';
+
+.admin-shell {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) 1fr;
+  min-height: 100vh;
+  background: var(--color-bg);
+  transition: grid-template-columns var(--transition-slow);
+
+  &--collapsed {
+    grid-template-columns: var(--sidebar-width-collapsed) 1fr;
+  }
+
+  @include breakpoint(lg) {
+    grid-template-columns: 0 1fr;
+    &--collapsed { grid-template-columns: 0 1fr; }
+  }
+
+  &__main {
+    @include flex(column, stretch, flex-start);
+    overflow: hidden;
+    min-width: 0;
+  }
+
+  &__content {
+    flex: 1;
+    padding: var(--space-xl);
+    overflow-y: auto;
+    @include scrollbar;
+
+    @include breakpoint(md) {
+      padding: var(--space-md);
+    }
+  }
+}

@@ -1,0 +1,104 @@
+// portfolio-section.component.scss
+@import '../../../../../../styles/variables';
+@import '../../../../../../styles/mixins';
+@import '../../../public-shared';
+.portfolio-section {
+  background: var(--pub-bg);
+
+  &__cta {
+    margin-top: 48px;
+    text-align: center;
+  }
+}
+
+.portfolio-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+
+  @include breakpoint(md) { grid-template-columns: repeat(2, 1fr); }
+  @include breakpoint(sm) { grid-template-columns: 1fr; }
+}
+
+.portfolio-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
+  cursor: pointer;
+  background: var(--pub-bg-alt);
+
+  &--large {
+    grid-column: span 2;
+    grid-row: span 2;
+
+    @include breakpoint(md) {
+      grid-column: span 1;
+      grid-row: span 1;
+    }
+  }
+
+  &__img {
+    width: 100%;
+    padding-bottom: 75%;
+    position: relative;
+    overflow: hidden;
+
+    img {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform .6s ease;
+    }
+  }
+
+  &--large &__img { padding-bottom: 65%; }
+
+  &:hover &__img img { transform: scale(1.05); }
+  &:hover &__overlay { opacity: 1; }
+
+  &__placeholder {
+    position: absolute; inset: 0;
+    @include flex(row, center, center);
+    font-size: 3rem;
+    color: var(--pub-gold);
+    opacity: .3;
+    background: var(--pub-bg-alt);
+  }
+
+  &__overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(26,22,18,.85) 0%, transparent 60%);
+    @include flex(column, flex-end, flex-start);
+    padding: 24px;
+    opacity: 0;
+    transition: opacity .4s ease;
+  }
+
+  &__cat {
+    font-size: .72rem;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: var(--pub-gold);
+    margin-bottom: 8px;
+  }
+
+  &__title {
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: var(--pub-bg);
+    margin-bottom: 4px;
+  }
+
+  &__style { font-size: .78rem; color: rgba(247,244,239,.6); }
+}
+
+.portfolio-empty {
+  text-align: center;
+  padding: 48px;
+  color: var(--pub-text-muted);
+  background: var(--pub-bg-card);
+  border-radius: 4px;
+  border: 1px dashed var(--pub-border);
+}

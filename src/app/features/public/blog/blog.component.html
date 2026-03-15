@@ -1,0 +1,56 @@
+<div class="public-page">
+  <section class="blog-hero">
+    <div class="container">
+      <span class="eyebrow">Journal</span>
+      <h1 class="blog-hero__title">Design Ideas & <em>Inspiration</em></h1>
+      <p class="blog-hero__sub">Expert tips, trends and stories from the world of luxury interior design.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="filter-bar">
+        @for (cat of categories; track cat) {
+          <button class="filter-btn" [class.active]="(activeCategory() || 'All') === cat" (click)="setCategory(cat)">{{ cat }}</button>
+        }
+      </div>
+
+      @if (loading()) {
+        <div class="blog-grid">@for (i of [1,2,3,4,5,6]; track i){<div class="blog-skeleton"></div>}</div>
+      } @else if (blogs().length === 0) {
+        <div class="empty-state"><p>No articles found.</p></div>
+      } @else {
+        <div class="blog-grid">
+          @for (blog of blogs(); track blog._id) {
+            <a class="blog-card" [routerLink]="['/blog', blog.slug]">
+              <div class="blog-card__img">
+                @if (blog.featuredImage?.url) {
+                  <img [src]="blog.featuredImage.url" [alt]="blog.title" />
+                } @else {
+                  <div class="blog-card__img-placeholder">✍</div>
+                }
+                <span class="blog-card__cat">{{ blog.category }}</span>
+              </div>
+              <div class="blog-card__body">
+                <div class="blog-card__meta">{{ blog.readTime }} min read · {{ blog.createdAt | date:'MMM d, y' }}</div>
+                <h3 class="blog-card__title">{{ blog.title }}</h3>
+                <p class="blog-card__excerpt">{{ blog.excerpt }}</p>
+                <span class="blog-card__link">Read Article →</span>
+              </div>
+            </a>
+          }
+        </div>
+
+        @if (pages() > 1) {
+          <div class="pagination">
+            <button class="page-btn" (click)="goPage(page()-1)" [disabled]="page()===1">‹</button>
+            @for (p of getPageNumbers(); track p) {
+              <button class="page-btn" [class.active]="p===page()" (click)="goPage(p)">{{ p }}</button>
+            }
+            <button class="page-btn" (click)="goPage(page()+1)" [disabled]="page()===pages()">›</button>
+          </div>
+        }
+      }
+    </div>
+  </section>
+</div>

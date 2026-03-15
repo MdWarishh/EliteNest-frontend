@@ -1,0 +1,138 @@
+<!-- home-manager.component.html -->
+<div class="form-page">
+  <div class="page__header">
+    <div>
+      <h1 class="page__title">Home Manager</h1>
+      <p class="page__subtitle">Edit hero, stats & about section</p>
+    </div>
+    <button class="btn-primary" (click)="onSave()" [disabled]="saving()">
+      @if (saving())       { <span class="btn-spinner"></span> Saving... }
+      @else if (saved())   { ✓ Saved! }
+      @else                { Save Changes }
+    </button>
+  </div>
+
+  @if (error()) { <div class="alert alert--error">⚠ {{ error() }}</div> }
+
+  @if (loading()) {
+    <div class="skeleton-list">
+      @for (i of [1,2,3]; track i) { <div class="skeleton-row" style="height:180px"></div> }
+    </div>
+  } @else {
+
+  <!-- ══ HERO ══════════════════════════════════════════ -->
+  <div class="form-section">
+    <h2 class="form-section__title">🖼 Hero Section</h2>
+
+    <!-- Multi-image upload zone -->
+    <div class="hero-images">
+      <!-- Existing + new preview tiles -->
+      @for (img of allHeroImages(); track img.previewUrl; let i = $index) {
+        <div class="hero-img-tile" [class.hero-img-tile--active]="i === heroPreviewIndex()">
+          <img [src]="img.previewUrl" [alt]="'Slide ' + (i+1)" />
+          <div class="hero-img-tile__badge">{{ i + 1 }}</div>
+          <button
+            class="hero-img-tile__remove"
+            (click)="removeHeroImage(i)"
+            type="button"
+            title="Remove image"
+          >✕</button>
+        </div>
+      }
+
+      <!-- Add more button -->
+      <div class="hero-img-add" (click)="heroInput.click()" title="Add image(s)">
+        <span class="hero-img-add__icon">＋</span>
+        <span class="hero-img-add__label">Add Image</span>
+      </div>
+    </div>
+    <input
+      #heroInput
+      type="file"
+      accept="image/*"
+      multiple
+      style="display:none"
+      (change)="pickHeroFiles($event)"
+    />
+    <p class="form-hint">Upload one or more images — they will auto-rotate as a carousel on the homepage. Recommended 1920×1080px · JPG / WebP</p>
+
+    <div class="form-section__grid" style="margin-top:20px">
+      <div class="form-group form-group--full">
+        <label class="form-label">Main Headline</label>
+        <input class="form-input" [(ngModel)]="form.hero.headline" placeholder="Crafting Spaces That Inspire" />
+      </div>
+      <div class="form-group form-group--full">
+        <label class="form-label">Sub Headline</label>
+        <input class="form-input" [(ngModel)]="form.hero.subHeadline" placeholder="Premium Interior Design for Discerning Tastes" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">CTA Button Text</label>
+        <input class="form-input" [(ngModel)]="form.hero.ctaText" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">CTA Link</label>
+        <input class="form-input" [(ngModel)]="form.hero.ctaLink" />
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ STATS ══════════════════════════════════════════ -->
+  <div class="form-section">
+    <h2 class="form-section__title">📊 Stats / Numbers</h2>
+    <div class="form-section__grid">
+      <div class="form-group">
+        <label class="form-label">Projects Completed</label>
+        <input class="form-input" type="number" [(ngModel)]="form.stats.projectsCompleted" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Happy Clients</label>
+        <input class="form-input" type="number" [(ngModel)]="form.stats.happyClients" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Years Experience</label>
+        <input class="form-input" type="number" [(ngModel)]="form.stats.yearsExperience" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Cities Covered</label>
+        <input class="form-input" type="number" [(ngModel)]="form.stats.citiesCovered" />
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ ABOUT TEASER ═══════════════════════════════════ -->
+  <div class="form-section">
+    <h2 class="form-section__title">📷 About Section</h2>
+    <div class="upload-zone upload-zone--sm" (click)="aboutInput.click()">
+      @if (aboutPreview() || existingAbout()) {
+        <img [src]="aboutPreview() || existingAbout()" class="upload-zone__img" style="max-height:240px" alt="About" />
+        <div class="upload-zone__overlay">🔄 Click to replace</div>
+      } @else {
+        <div class="upload-zone__empty">
+          <div class="upload-zone__icon">📷</div>
+          <div class="upload-zone__label">Upload About Section Image</div>
+          <div class="upload-zone__hint">Recommended 600×800px portrait</div>
+        </div>
+      }
+    </div>
+    <input #aboutInput type="file" accept="image/*" style="display:none" (change)="pickFile('about', $event)" />
+
+    <div class="form-section__grid" style="margin-top:20px">
+      <div class="form-group form-group--full">
+        <label class="form-label">Heading</label>
+        <input class="form-input" [(ngModel)]="form.aboutTeaser.heading" placeholder="Where Design Meets Passion" />
+      </div>
+      <div class="form-group form-group--full">
+        <label class="form-label">Description</label>
+        <textarea class="form-textarea" rows="4" [(ngModel)]="form.aboutTeaser.description" placeholder="About section description..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <button class="btn-primary" (click)="onSave()" [disabled]="saving()">
+      @if (saving()) { <span class="btn-spinner"></span> Saving... } @else { Save All Changes }
+    </button>
+  </div>
+
+  }<!-- end @else -->
+</div>

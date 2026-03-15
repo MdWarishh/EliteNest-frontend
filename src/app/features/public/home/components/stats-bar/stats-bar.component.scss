@@ -1,0 +1,46 @@
+// stats-bar.component.scss
+@import '../../../../../../styles/variables';
+@import '../../../../../../styles/mixins';
+@import '../../../public-shared';
+.stats-bar {
+  background: var(--pub-bg);
+  border-bottom: 1px solid var(--pub-border);
+  padding: 40px 0;
+
+  &__grid {
+    @include flex(row, center, center);
+    flex-wrap: wrap;
+    gap: 0;
+  }
+}
+
+.stat-item {
+  @include flex(column, center, center, 4px);
+  padding: 16px 48px;
+  text-align: center;
+  flex: 1;
+  min-width: 140px;
+
+  &__num {
+    font-family: var(--font-heading);
+    font-size: 2.8rem;
+    font-weight: 600;
+    color: var(--pub-text);
+    line-height: 1;
+  }
+
+  &__label {
+    font-size: .75rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--pub-text-muted);
+  }
+
+  &__divider {
+    width: 1px;
+    height: 48px;
+    background: var(--pub-border);
+
+    @include breakpoint(sm) { display: none; }
+  }
+}

@@ -1,0 +1,79 @@
+// services-section.component.scss
+@import '../../../../../../styles/variables';
+@import '../../../../../../styles/mixins';
+@import '../../../public-shared';
+
+.services__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--pub-border);
+  border: 1px solid var(--pub-border);
+  border-radius: 4px;
+  overflow: hidden;
+
+  @include breakpoint(md) { grid-template-columns: repeat(2, 1fr); }
+  @include breakpoint(sm) { grid-template-columns: 1fr; }
+}
+
+.service-card {
+  background: var(--pub-bg-card);
+  padding: 40px 36px;
+  position: relative;
+  overflow: hidden;
+  transition: transform .3s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    z-index: 1;
+    box-shadow: 0 20px 40px rgba(26,22,18,.1);
+  }
+
+  &:hover .service-card__hover-line { transform: scaleX(1); }
+
+  &__icon  { font-size: 2.2rem; margin-bottom: 20px; display: block; }
+
+  &__title {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: var(--pub-text);
+    margin-bottom: 12px;
+  }
+
+  &__desc {
+    font-size: .9rem;
+    color: var(--pub-text-sec);
+    line-height: 1.7;
+    margin-bottom: 16px;
+  }
+
+  &__features {
+    list-style: none;
+    @include flex(column, flex-start, flex-start, 8px);
+
+    li {
+      font-size: .82rem;
+      color: var(--pub-text-muted);
+      padding-left: 16px;
+      position: relative;
+
+      &::before {
+        content: '–';
+        position: absolute;
+        left: 0;
+        color: var(--pub-gold);
+      }
+    }
+  }
+
+  &__hover-line {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--pub-gold), var(--pub-gold-light));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .4s ease;
+  }
+}

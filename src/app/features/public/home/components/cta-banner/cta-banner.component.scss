@@ -1,0 +1,71 @@
+// cta-banner.component.scss
+@import '../../../../../../styles/variables';
+@import '../../../../../../styles/mixins';
+@import '../../../public-shared';
+
+.cta-banner {
+  position: relative;
+  overflow: hidden;
+  padding: 100px 0;
+  text-align: center;
+
+  &__bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      135deg,
+      var(--pub-bg-dark) 0%,
+      var(--pub-bg-dark) 60%,
+      var(--pub-bg-dark) 100%
+    );
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        ellipse at center,
+        rgba(184,147,74,.12) 0%,
+        transparent 70%
+      );
+    }
+  }
+
+  &__content {
+    position: relative;
+    z-index: 2;
+    @include flex(column, center, center, 0);
+  }
+
+  &__eyebrow {
+    font-size: .78rem;
+    letter-spacing: .25em;
+    text-transform: uppercase;
+    color: var(--pub-gold);
+    margin-bottom: 20px;
+  }
+
+  &__title {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 300;
+    color: var(--pub-bg);
+    max-width: 640px;
+    margin-bottom: 20px;
+    line-height: 1.2;
+
+    em { font-style: italic; color: var(--pub-gold); }
+  }
+
+  &__sub {
+    color: rgba(247,244,239,.6);
+    max-width: 480px;
+    line-height: 1.7;
+    margin-bottom: 40px;
+  }
+
+  &__actions {
+    @include flex(row, center, center, var(--space-lg));
+    flex-wrap: wrap;
+  }
+}

@@ -1,0 +1,227 @@
+// src/app/features/auth/login/login.component.scss
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins';
+
+.login-page {
+  min-height: 100vh;
+  @include flex(row, center, center);
+  background: var(--color-bg);
+  position: relative;
+  overflow: hidden;
+
+  // ─── Background ───────────────────────────────────
+  &__bg { position: absolute; inset: 0; pointer-events: none; }
+
+  &__orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.12;
+
+    &--1 {
+      width: 500px; height: 500px;
+      background: var(--color-gold);
+      top: -200px; right: -100px;
+      animation: float 8s ease-in-out infinite;
+    }
+    &--2 {
+      width: 300px; height: 300px;
+      background: var(--color-gold-dark);
+      bottom: -100px; left: -80px;
+      animation: float 10s ease-in-out infinite reverse;
+    }
+  }
+
+  &__grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(var(--color-border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--color-border) 1px, transparent 1px);
+    background-size: 40px 40px;
+    opacity: 0.3;
+  }
+}
+
+// ─── Login Card ───────────────────────────────────────
+.login-card {
+  @include glass;
+  @include card;
+  width: 100%;
+  max-width: 440px;
+  position: relative;
+  z-index: 1;
+  animation: fadeIn 0.5s ease;
+
+  @include breakpoint(sm) {
+    margin: var(--space-md);
+    padding: var(--space-xl);
+  }
+
+  // Gold top border
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 10%; right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+  }
+
+  &__logo {
+    @include flex(row, center, center, 10px);
+    margin-bottom: var(--space-xl);
+
+    &-icon {
+      font-size: 1.5rem;
+      color: var(--color-gold);
+    }
+    &-text {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      color: var(--color-text-primary);
+    }
+  }
+
+  &__title {
+    font-size: 1.8rem;
+    text-align: center;
+    margin-bottom: var(--space-xs);
+  }
+
+  &__subtitle {
+    text-align: center;
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+    margin-bottom: var(--space-xl);
+  }
+
+  &__error {
+    @include flex(row, center, flex-start, var(--space-sm));
+    background: rgba(224, 90, 90, 0.1);
+    border: 1px solid rgba(224, 90, 90, 0.3);
+    border-radius: var(--radius-md);
+    padding: var(--space-sm) var(--space-md);
+    color: var(--color-error);
+    font-size: 0.875rem;
+    margin-bottom: var(--space-lg);
+  }
+
+  &__footer {
+    text-align: center;
+    color: var(--color-text-muted);
+    font-size: 0.78rem;
+    margin-top: var(--space-xl);
+  }
+}
+
+// ─── Form ─────────────────────────────────────────────
+.login-form { @include flex(column, stretch, flex-start, var(--space-lg)); }
+
+.form-group { @include flex(column, stretch, flex-start, var(--space-sm)); }
+
+.form-label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
+.form-input-wrap {
+  position: relative;
+  @include flex(row, center);
+}
+
+.form-input-icon {
+  position: absolute;
+  left: var(--space-md);
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  pointer-events: none;
+}
+
+.form-input {
+  width: 100%;
+  padding: 14px var(--space-md) 14px 42px;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
+  font-size: 0.95rem;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  outline: none;
+
+  &::placeholder { color: var(--color-text-muted); }
+
+  &:focus {
+    border-color: var(--color-gold);
+    box-shadow: 0 0 0 3px var(--color-gold-muted);
+  }
+
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+}
+
+.form-input-toggle {
+  position: absolute;
+  right: var(--space-md);
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  font-size: 1rem;
+  line-height: 1;
+  padding: 0;
+  transition: color var(--transition-fast);
+  &:hover { color: var(--color-gold); }
+}
+
+// ─── Login Button ─────────────────────────────────────
+.btn-login {
+  @include flex(row, center, center, var(--space-sm));
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(135deg, var(--color-gold), var(--color-gold-dark));
+  border: none;
+  border-radius: var(--radius-md);
+  color: #0e0e0e;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  transition: opacity var(--transition-base), transform var(--transition-bounce);
+  margin-top: var(--space-sm);
+
+  &:hover:not(:disabled) {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  &:active:not(:disabled) { transform: translateY(0); }
+
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  &__arrow { font-size: 1.1rem; transition: transform var(--transition-base); }
+  &:hover:not(:disabled) &__arrow { transform: translateX(4px); }
+
+  &__spinner {
+    width: 16px; height: 16px;
+    border: 2px solid rgba(0,0,0,0.3);
+    border-top-color: #0e0e0e;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+}
+
+// ─── Animations ───────────────────────────────────────
+@keyframes float {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50%       { transform: translateY(-30px) scale(1.05); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

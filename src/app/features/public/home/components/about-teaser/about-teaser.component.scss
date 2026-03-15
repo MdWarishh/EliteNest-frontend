@@ -1,0 +1,93 @@
+// about-teaser.component.scss
+@import '../../../../../../styles/variables';
+@import '../../../../../../styles/mixins';
+@import '../../../public-shared';
+
+.about-teaser {
+  &__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+
+    @include breakpoint(md) {
+      grid-template-columns: 1fr;
+      gap: 48px;
+    }
+  }
+
+  &__visual   { position: relative; }
+  &__img-wrap { position: relative; padding-top: 10%; padding-left: 10%; }
+
+  &__img {
+    width: 100%;
+    border-radius: 4px;
+    display: block;
+  }
+
+  &__img-placeholder {
+    width: 100%;
+    padding-bottom: 120%;
+    background: var(--pub-bg-alt);
+    border-radius: 4px;
+    @include flex(row, center, center);
+    position: relative;
+    overflow: hidden;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent 40%, rgba(184,147,74,.1));
+    }
+  }
+
+  &__img-icon {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 4rem;
+    color: var(--pub-gold);
+    opacity: .3;
+  }
+
+  &__badge {
+    position: absolute;
+    bottom: -5%; left: -5%;
+    background: var(--pub-bg-dark);
+    color: var(--pub-bg);
+    padding: 20px 24px;
+    border-radius: 4px;
+    @include flex(column, flex-start, flex-start, 4px);
+    box-shadow: 0 20px 40px rgba(26,22,18,.2);
+  }
+
+  &__badge-num {
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: var(--pub-gold);
+    line-height: 1;
+  }
+
+  &__badge-text {
+    font-size: .75rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: rgba(247,244,239,.6);
+  }
+
+  &__features {
+    list-style: none;
+    @include flex(column, flex-start, flex-start, 14px);
+    margin: 28px 0 36px;
+
+    li {
+      @include flex(row, center, flex-start, 12px);
+      font-size: .95rem;
+      color: var(--pub-text-sec);
+    }
+  }
+}
+
+.checkmark { color: var(--pub-gold); font-size: .8rem; }

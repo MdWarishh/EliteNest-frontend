@@ -1,0 +1,8 @@
+// home.component.scss
+// Parent component ka kaam sirf sections ko compose karna hai.
+// Sab styles ab unke respective child component SCSS files mein hain.
+// Agar koi global home-level override chahiye to yahan add karo.
+
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins';
+@import '../_public-shared';

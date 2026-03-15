@@ -1,0 +1,85 @@
+<!-- team.component.html -->
+<div class="page">
+  <div class="page__header">
+    <div>
+      <h1 class="page__title">Team</h1>
+      <p class="page__subtitle">{{ items().length }} members</p>
+    </div>
+    <button class="btn-primary" (click)="openCreate()">+ Add Member</button>
+  </div>
+
+  @if (loading()) {
+    <div class="skeleton-list">@for (i of [1,2,3]; track i){<div class="skeleton-row"></div>}</div>
+  } @else if (items().length === 0) {
+    <div class="empty-state"><span class="empty-state__icon">◎</span><p>No team members yet</p><button class="btn-primary" (click)="openCreate()">Add Member</button></div>
+  } @else {
+    <div class="team-grid">
+      @for (member of items(); track member._id) {
+        <div class="member-card">
+          <div class="member-card__avatar">
+            @if (member.avatar?.url) {
+              <img [src]="member.avatar.url" [alt]="member.name" />
+            } @else {
+              <span>{{ member.name.charAt(0) }}</span>
+            }
+          </div>
+          <div class="member-card__info">
+            <div class="member-card__name">{{ member.name }}</div>
+            <div class="member-card__role">{{ member.designation }}</div>
+            @if (member.bio) { <p class="member-card__bio">{{ member.bio }}</p> }
+          </div>
+          <div class="member-card__actions">
+            <span class="badge" [class]="member.isActive ? 'badge--success' : 'badge--error'">{{ member.isActive ? 'Active' : 'Inactive' }}</span>
+            <div class="action-btns">
+              <button class="action-btn action-btn--edit" (click)="openEdit(member)">✎</button>
+              <button class="action-btn action-btn--delete" (click)="confirmDelete(member._id)">✕</button>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>
+
+@if (showForm()) {
+  <div class="panel-backdrop" (click)="showForm.set(false)">
+    <div class="panel" (click)="$event.stopPropagation()">
+      <div class="panel__header">
+        <h2 class="panel__title">{{ editItem() ? 'Edit Member' : 'New Member' }}</h2>
+        <button class="panel__close" (click)="showForm.set(false)">✕</button>
+      </div>
+      @if (error()) { <div class="form-error-banner">⚠ {{ error() }}</div> }
+      <div class="form-group">
+        <label class="form-label form-label--required">Name</label>
+        <input class="form-input" [(ngModel)]="form.name" placeholder="Full name" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Designation</label>
+        <input class="form-input" [(ngModel)]="form.designation" placeholder="e.g. Senior Designer" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Bio</label>
+        <textarea class="form-textarea" [(ngModel)]="form.bio" rows="3" placeholder="Short bio..."></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Avatar</label>
+        <div class="image-upload-mini" (click)="imgInput.click()">
+          @if (imagePreview()) { <img [src]="imagePreview()" alt="Preview" /> }
+          @else { <span>📷 Upload photo</span> }
+        </div>
+        <input #imgInput type="file" accept="image/*" style="display:none" (change)="onImageSelect($event)" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Sort Order</label>
+        <input class="form-input" type="number" [(ngModel)]="form.sortOrder" />
+      </div>
+      <div class="panel__actions">
+        <button class="btn-secondary" (click)="showForm.set(false)">Cancel</button>
+        <button class="btn-primary" (click)="onSubmit()" [disabled]="saving()">{{ saving() ? 'Saving...' : (editItem() ? 'Update' : 'Add Member') }}</button>
+      </div>
+    </div>
+  </div>
+}
+
+<app-confirm-modal [visible]="!!deleteId()" title="Remove Member?" message="This will remove the team member."
+  [loading]="deleting()" (confirm)="doDelete()" (cancel)="cancelDelete()" />
